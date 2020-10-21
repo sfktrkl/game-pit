@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home">
     <h1>{{ message }}</h1>
   </div>
 </template>
@@ -14,5 +14,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.home {
+  margin: 10px;
+}
 </style>
