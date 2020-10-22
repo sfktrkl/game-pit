@@ -2,6 +2,7 @@
   <nav>
     <ul>
       <li><router-link to="/" exact>Home</router-link></li>
+      <li><router-link to="/Zneyk" exact>Zneyk</router-link></li>
       </ul>
   </nav>
 </template>

@@ -8,6 +8,11 @@ const routes = [
         component: Home
     },
     {
+        path: '/Zneyk',
+        name: 'Zneyk game',
+        component: () => import("../views/Zneyk.vue")
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'Not Found',
         component: () => import("../views/NotFound.vue")
