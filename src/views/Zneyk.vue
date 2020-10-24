@@ -3,7 +3,7 @@
     <div id="name">Zneyk</div>
     <div id="instructions">
       Zneyk is a very simple snake game. Try to eat foods, do not hit any blocks and make a good score.<br>
-      Before starting the game, use left mouse button to draw blocks and right mouse button to delete them.</div>
+      Before starting the game, use left mouse button to draw blocks and middle mouse button to delete them.</div>
     <button class="play" @click="play" tabindex="-1">Play</button>
     <div id="score">{{score}}</div>
     <canvas id="snakeboard" tabindex="0" @mousedown="canvas_draw('down', $event)"
@@ -206,7 +206,7 @@ export default {
               if (!foundBlock)
                 this.blocks.push({x: x, y: y});
             }
-            else if (this.mouse_button == 2) {
+            else if (this.mouse_button == 1) {
               if (foundBlock)
                 this.blocks.splice(this.blocks.indexOf(foundBlock), 1);
             }
