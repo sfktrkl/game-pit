@@ -13,6 +13,11 @@ const routes = [
         component: () => import("../views/Zneyk.vue")
     },
     {
+        path: '/Zhips',
+        name: 'Zhips game',
+        component: () => import('../views/Zhips.vue')
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'Not Found',
         component: () => import("../views/NotFound.vue")
