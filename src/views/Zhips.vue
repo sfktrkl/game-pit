@@ -12,7 +12,9 @@
 export default {
   data () {
     return {
-      canvas_img: null,
+      images: ["beach", "sea", "sea_red", "sea_green", "sea_purple"],
+      tile: { BEACH: 0, SEA: 1, RED: 2, GREEN: 3, PURPLE: 4 },
+      images_: [],
 
       // Initial game state
       game_state: 'placement',
@@ -32,35 +34,51 @@ export default {
       hit_tiles: [],
       enemy_hit_tiles: [],
 
-      // Color multipliers
-      color_default: [1, 1, 1],
-      color_greenish: [0.3, 1, 0.3],
-      color_reddish: [2, 0.3, 0.3],
+      // Sea tile counts
+      sea_tile_x: 21,
+      sea_tile_y: 10,
 
       // Mouse locations
       m_x: 0,
       x_y: 0,
-      m_rounded_x: 0,
-      m_rounded_y: 0
+      m_tile_x: 0,
+      m_tile_y: 0
     }
   },
   methods: {
+    images_loaded: function () {
+      return this.images.length == this.images_.length;
+    },
     clear_sea: function () {
-      if (!this.canvas_img)
+      if (!this.images_loaded())
         return;
 
-      this.sea_ctx.drawImage(this.canvas_img, 0, 0, this.sea.width, this.sea.height);
-    },
-    change_sea_color: function (color, dx, width, dy, height) {
-      // top left x, y; rectange width, height
-      var image_data = this.sea_ctx.getImageData(dx, dy, width, height);
-      for (var t = 0; t < image_data.data.length; t += 4) {
-        image_data.data[t] = color[0] * image_data.data[t];
-        image_data.data[t+1] = color[1] * image_data.data[t + 1];
-        image_data.data[t+2] = color[2] * image_data.data[t + 2];
+      this.tiles = [];
+      for (let i = 0; i < this.sea_tile_y; i++) {
+        var row = [];
+        for (let j = 0; j < this.sea_tile_x; j++) {
+          if (j == 10)
+            row.push(this.tile.BEACH)
+          else
+            row.push(this.tile.SEA);
+        }
+        this.tiles.push(row);
       }
-      // top left x, y; top left which image will be extracted; rectangle width, height
-      this.sea_ctx.putImageData(image_data, dx, dy, 0, 0, width, height);
+      this.draw_sea();
+    },
+    draw_sea: function () {
+      for (let i = 0; i < this.sea_tile_y; i++) {
+        for (let j = 0; j < this.sea_tile_x; j++) {
+          this.sea_ctx.drawImage(this.images_[this.tiles[i][j]], j * 64, i * 64, 64, 64);
+        }
+      }
+    },
+    change_tile: function (tile, tile_x, width, tile_y, height) {
+      for (let i = tile_y; i < tile_y + height && i < this.sea_tile_y; i++) {
+        for (let j = tile_x; j < tile_x + width && j < this.sea_tile_x; j++) {
+          this.tiles[i][j] = tile;
+        }
+      }
     },
     round_to_multiples_of_64: function (number) {
       var remainder = number % 64;
@@ -70,9 +88,9 @@ export default {
     update_mouse_locations: function (e) {
       // Round to multiples of 64
       this.m_x = e.clientX - this.sea.offsetLeft;
-      this.m_rounded_x = this.round_to_multiples_of_64(this.m_x);
+      this.m_tile_x = this.round_to_multiples_of_64(this.m_x) / 64;
       this.m_y = e.clientY - this.sea.offsetTop;
-      this.m_rounded_y = this.round_to_multiples_of_64(this.m_y);
+      this.m_tile_y = this.round_to_multiples_of_64(this.m_y) / 64;
     },
     get_current_ship: function () {
       var ship = this.ships[this.ship_to_place];
@@ -82,19 +100,19 @@ export default {
         return ship;
     },
     update_sea: function (e) {
+      if (!this.images_loaded())
+        return;
+
       // Clear the sea and get mouse locations
       this.clear_sea();
       this.update_mouse_locations(e);
 
-      // Do not update sea, when mouse is located at beach
       var leftEnd = 640, rightStart = 640 + 64;
-      if (this.m_x < rightStart && this.m_x > leftEnd)
-        return;
 
-      var dx = 0, width = 0;
-      var dy = 0, height = 0;
+      var tile_x = 0, width = 0;
+      var tile_y = 0, height = 0;
 
-      var color = this.color_default;
+      var tile = this.tile.SEA;
       if (this.game_state == 'placement')
       {
         // When game is in placement state,
@@ -104,28 +122,28 @@ export default {
         if (this.m_x <= leftEnd)
         {
           // For every tile in the sea
-          dx = 0; width = 64 * 10;
-          dy = 0; height = 64 * 10;
-          color = this.color_reddish;
+          tile_x = 0; width = 10;
+          tile_y = 0; height = 10;
+          tile = this.tile.RED;
           this.cannot_place = true;
         }
         else if (this.m_x >= rightStart)
         {
           // If mouse is in friendly territory,
           // Get the current ship which will be placed,
-          // and calculate image width which will be changed.
-          dx = this.m_rounded_x; width = 64 * this.get_current_ship()[0];
-          dy = this.m_rounded_y; height = 64 * this.get_current_ship()[1];
+          // and get the tile count which will be changed.
+          tile_x = this.m_tile_x; width = this.get_current_ship()[0];
+          tile_y = this.m_tile_y; height = this.get_current_ship()[1];
           // Only allow placing ship, when it fits the sea
-          if (dx + width <= this.sea.width && dy + height <= this.sea.height)
+          if (tile_x + width <= this.sea_tile_x && tile_y + height <= this.sea_tile_y)
           {
-            color = this.color_greenish;
+            tile = this.tile.GREEN;
             this.cannot_place = false;
           }
           // Otherwise, make ship red color and forbid placing it
           else
           {
-            color = this.color_reddish;
+            tile = this.tile.RED;
             this.cannot_place = true;
           }
         }
@@ -136,49 +154,49 @@ export default {
         if (this.m_x >= rightStart)
         {
           // For every tile in the sea
-          dx = rightStart; width = 64 * 10;
-          dy = 0; height = 64 * 10;
-          color = this.color_reddish;
+          tile_x = 11; width = 10;
+          tile_y = 0; height = 10;
+          tile = this.tile.RED;
           this.cannot_attack = true;
         }
         else if (this.m_x <= leftEnd)
         {
           // Only one tile can be attacked
-          dx = this.m_rounded_x; width = 64;
-          dy = this.m_rounded_y; height = 64;
+          tile_x = this.m_tile_x; width = 1;
+          tile_y = this.m_tile_y; height = 1;
           // Do not allow attacking outside the sea
-          if (dx + width <= leftEnd && dy + height <= this.sea.height)
+          if (tile_x + width <= 10 && tile_y + height <= this.sea_tile_y)
           {
-            color = this.color_greenish;
+            tile = this.tile.GREEN;
             this.cannot_attack = false;
           }
           else
           {
-            color = this.color_reddish;
+            tile = this.tile.RED;
             this.cannot_attack = true;
           }
         }
       }
-      this.change_sea_color(color, dx, width, dy, height);
+      this.change_tile(tile, tile_x, width, tile_y, height);
 
       // Draw placed ships
       var ship_tiles = this.get_ship_tiles(this.ship_locations);
       if (ship_tiles.length > 0) {
         ship_tiles.forEach(tiles => {
-            this.change_sea_color(this.color_reddish, tiles[0], 64, tiles[1], 64);
+            this.change_tile(this.tile.PURPLE, tiles[0], 1, tiles[1], 1);
         })
       }
 
       // Draw every hit tile,
       // green color for already hit empty tiles,
-      // red color for hit ship tiles
+      // red color for hit ship's tiles
       if (this.enemy_hit_tiles.length > 0) {
         this.enemy_hit_tiles.forEach(tiles => {
-            this.change_sea_color(tiles[2] == 1 ? this.color_reddish : this.color_greenish, tiles[0], 64, tiles[1], 64);
+            this.change_tile(tiles[2] == 1 ? this.tile.RED : this.tile.GREEN, tiles[0], 1, tiles[1], 1);
         })
       }
 
-      this.drawing = false;
+      this.draw_sea();
     },
     get_ship_tiles: function(ship_locations) {
       var ship_tiles = [];
@@ -194,7 +212,7 @@ export default {
       return ship_tiles;
     },
     check_collision: function (existing_tiles, ship_tiles) {
-      // Check whether given ship tile, collides with an existing one
+      // Check whether given ship tile collides with an existing one
       // return 1 if it is colliding.
       var existing_ship_tiles = this.get_ship_tiles(existing_tiles);
       for (let i = 0; i < existing_ship_tiles.length; i++) {
@@ -212,7 +230,7 @@ export default {
       var current_ship = this.get_current_ship();
       for (let i = 0; i < current_ship[0]; i++) {
         for (let j = 0; j < current_ship[1]; j++) {
-          ship_tiles.push([this.m_rounded_x + i * 64, this.m_rounded_y + j * 64]);
+          ship_tiles.push([this.m_tile_x + i, this.m_tile_y + j]);
         }
       }
 
@@ -244,7 +262,7 @@ export default {
       for (let i = 0; i < this.enemy_hit_tiles.length; i++)
       {
         var enemy_hit_tile = this.enemy_hit_tiles[i];
-        if (this.m_rounded_x == enemy_hit_tile[0] && this.m_rounded_y == enemy_hit_tile[1])
+        if (this.m_tile_x == enemy_hit_tile[0] && this.m_tile_y == enemy_hit_tile[1])
           return;
       }
 
@@ -254,14 +272,14 @@ export default {
       for (let i = 0; i < enemy_ship_tiles.length; i++)
       {
         var enemy_ship_tile = enemy_ship_tiles[i];
-        if (this.m_rounded_x == enemy_ship_tile[0] && this.m_rounded_y == enemy_ship_tile[1])
+        if (this.m_tile_x == enemy_ship_tile[0] && this.m_tile_y == enemy_ship_tile[1])
           hit = 1;
       }
 
-      this.enemy_hit_tiles.push([this.m_rounded_x, this.m_rounded_y, hit]);
+      this.enemy_hit_tiles.push([this.m_tile_x, this.m_tile_y, hit]);
     },
     getRandomTile: function (dir) {
-      return Math.floor(Math.random() * Math.floor(dir == "x" ? 9 : 8)) * 64;
+      return Math.floor(Math.random() * Math.floor(dir == "x" ? 9 : 8));
     },
     generate_enemy_ships: function () {
       // Get the current ship and calculate its tiles locations
@@ -272,14 +290,14 @@ export default {
         var random_x = this.getRandomTile("x");
         var random_y = this.getRandomTile("y");
 
-        var width = 64 * current_ship[0];
-        var height = 64 * current_ship[1];
+        var width = current_ship[0];
+        var height = current_ship[1];
         // Only allow ships which fits the sea
-        if (random_x + width <= this.sea.width && random_y + height <= this.sea.height)
+        if (random_x + width <= this.sea_tile_x && random_y + height <= this.sea_tile_y)
         {
           for (let i = 0; i < current_ship[0]; i++) {
             for (let j = 0; j < current_ship[1]; j++) {
-              ship_tiles.push([random_x + i * 64, random_y + j * 64]);
+              ship_tiles.push([random_x + i, random_y + j]);
             }
           }
         }
@@ -308,14 +326,16 @@ export default {
     }
   },
   created() {
-    // Load canvas image,
-    // It is created using, sea.png and beach.png tiles
-    const img = new Image();
-    img.src = "./assets/zhips/canvas.png";
-    img.onload = () => {
-      this.canvas_img = img;
-      this.clear_sea();
-    };
+    // Load every tile image
+    this.images.forEach(image => {
+      const img = new Image();
+      img.src = "./assets/zhips/" + image + ".png";
+      img.onload = () => {
+        this.images_.push(img);
+        if (this.images_loaded())
+          this.clear_sea();
+      };
+    });
   },
   mounted() {
     // Create a high dpi canvas
