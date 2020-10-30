@@ -132,10 +132,14 @@ export default {
           // If mouse is in friendly territory,
           // Get the current ship which will be placed,
           // and get the tile count which will be changed.
-          tile_x = this.m_tile_x; width = this.get_current_ship()[0];
-          tile_y = this.m_tile_y; height = this.get_current_ship()[1];
+          var current_ship = this.get_current_ship();
+          tile_x = this.m_tile_x; width = current_ship[0];
+          tile_y = this.m_tile_y; height = current_ship[1];
           // Only allow placing ship, when it fits the sea
-          if (tile_x + width <= this.sea_tile_x && tile_y + height <= this.sea_tile_y)
+          // and when it does not collide with existing one.
+          var current_ship_tiles = this.get_current_ship_tiles(current_ship, tile_x, tile_y);
+          if (tile_x + width <= this.sea_tile_x && tile_y + height <= this.sea_tile_y &&
+             !this.check_collision(this.ship_locations, current_ship_tiles))
           {
             tile = this.tile.GREEN;
             this.cannot_place = false;
@@ -219,22 +223,26 @@ export default {
         for (let j = 0; j < ship_tiles.length; j++) {
           if (existing_ship_tiles[i][0] == ship_tiles[j][0] &&
               existing_ship_tiles[i][1] == ship_tiles[j][1])
-              return 0;
+              return 1;
         }
       }
-      return 1;
+      return 0;
+    },
+    get_current_ship_tiles: function (current_ship, tile_x, tile_y) {
+      var ship_tiles = [];
+      for (let i = 0; i < current_ship[0]; i++) {
+        for (let j = 0; j < current_ship[1]; j++) {
+          ship_tiles.push([tile_x + i, tile_y + j]);
+        }
+      }
+      return ship_tiles;
     },
     place_ship: function () {
       // Get the current ship and calculate its tiles locations
-      var ship_tiles = [];
       var current_ship = this.get_current_ship();
-      for (let i = 0; i < current_ship[0]; i++) {
-        for (let j = 0; j < current_ship[1]; j++) {
-          ship_tiles.push([this.m_tile_x + i, this.m_tile_y + j]);
-        }
-      }
+      var ship_tiles = this.get_current_ship_tiles(current_ship, this.m_tile_x, this.m_tile_y);
 
-      if(!this.check_collision(this.ship_locations, ship_tiles))
+      if(this.check_collision(this.ship_locations, ship_tiles))
         return;
 
       // Store ship tiles in ship locations array
@@ -294,19 +302,13 @@ export default {
         var height = current_ship[1];
         // Only allow ships which fits the sea
         if (random_x + width <= this.sea_tile_x && random_y + height <= this.sea_tile_y)
-        {
-          for (let i = 0; i < current_ship[0]; i++) {
-            for (let j = 0; j < current_ship[1]; j++) {
-              ship_tiles.push([random_x + i, random_y + j]);
-            }
-          }
-        }
+          ship_tiles = this.get_current_ship_tiles(current_ship, random_x, random_y);
 
         // If no ship tile is generated (random values
         // does not fit the sea) or generated tiles
         // collide with existing ships, reiterate.
         if(ship_tiles.length < 1 ||
-          !this.check_collision(this.enemy_ship_locations, ship_tiles))
+          this.check_collision(this.enemy_ship_locations, ship_tiles))
         {
           i--;
           continue;
