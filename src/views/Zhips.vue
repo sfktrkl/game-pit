@@ -1,9 +1,28 @@
 <template>
   <div class="zhips">
     <div id="name">Zhips</div>
-    <div id="instructions">Under construction :)</div>
+    <div id="instructions">
+      Zhips is a battleship game. Place your ships to tiles and attack to enemy tiles.
+      There are two stages of game which are Placement Stage and Attack Stage.<br>
+      <b>Placement Stage:</b> Ships have to be placed to friendly territory (right sea).
+      To place the ships use left mouse button and to rotate them before place use middle mouse button.<br>
+      During placement stage, <span style="color: green">Green</span> shows allowable moves,
+      <span style="color: purple">Purple</span> shows placed ships,
+      <span style="color: red">Red</span> shows forbidden moves.<br>
+      <b>Attack Stage:</b> Attack the enemy territory (left sea) using left mouse button.
+      Every ship tile which will be hit will count as 10 score.
+      First player to reach 200 score will win.<br>
+      During attack stage, <span style="color: green">Green</span> shows empty tiles and allowable moves,
+      <span style="color: purple">Purple</span> shows your ships,
+      <span style="color: red">Red</span> shows hit tiles and forbidden moves
+    </div>
+    <div id="game_state">{{get_game_state()}}</div>
+    <div id="scores">
+      <div id="player_score">Your Score: {{player_score}}</div>
+      <div id="enemy_score">Enemy Score: {{enemy_score}}</div>
+    </div>
     <canvas id="sea" tabindex="0" @mousemove="update_sea($event)"
-      @mousedown="place_attack_ship()">
+      @mousedown="place_attack_ship($event)">
     </canvas>
   </div>
 </template>
@@ -42,12 +61,44 @@ export default {
       m_x: 0,
       x_y: 0,
       m_tile_x: 0,
-      m_tile_y: 0
+      m_tile_y: 0,
+
+      // Scores
+      enemy_score: 0,
+      player_score: 0
     }
   },
   methods: {
+    load_image: function (image) {
+      const img = new Image();
+      img.src = "./assets/zhips/" + image + ".png";
+      img.onload = () => {
+        this.images_.push(img);
+        this.images.shift();
+        if (this.images_loaded())
+          this.clear_sea();
+        else
+          // Load images recursively to keep their order.
+          this.load_image(this.images[0]);
+      };
+    },
     images_loaded: function () {
-      return this.images.length == this.images_.length;
+      return !this.images.length;
+    },
+    end_game: function (state) {
+      this.game_state = state;
+      this.cannot_place = true;
+      this.cannot_attack = true;
+    },
+    get_game_state: function () {
+      if (this.game_state == "placement")
+        return "Placement Stage";
+      else if (this.game_state == "attack")
+        return "Attack Stage";
+      else if (this.game_state == "win")
+        return "You Win!"
+      else if (this.game_state == "lose")
+        return "You Lose!"
     },
     clear_sea: function () {
       if (!this.images_loaded())
@@ -194,10 +245,17 @@ export default {
       // Draw every hit tile,
       // green color for already hit empty tiles,
       // red color for hit ship's tiles
+      // Both player's and enemies' tiles are drawn.
       if (this.enemy_hit_tiles.length > 0) {
         this.enemy_hit_tiles.forEach(tiles => {
-            this.change_tile(tiles[2] == 1 ? this.tile.RED : this.tile.GREEN, tiles[0], 1, tiles[1], 1);
-        })
+          this.change_tile(tiles[2] == 1 ? this.tile.RED : this.tile.GREEN, tiles[0], 1, tiles[1], 1);
+        });
+      }
+
+      if (this.hit_tiles.length > 0) {
+        this.hit_tiles.forEach(tiles => {
+          this.change_tile(tiles[2] == 1 ? this.tile.RED : this.tile.GREEN, tiles[0], 1, tiles[1], 1);
+        });
       }
 
       this.draw_sea();
@@ -281,13 +339,20 @@ export default {
       {
         var enemy_ship_tile = enemy_ship_tiles[i];
         if (this.m_tile_x == enemy_ship_tile[0] && this.m_tile_y == enemy_ship_tile[1])
+        {
           hit = 1;
+          this.player_score += 10;
+          // If player reaches 200 score, finish game.
+          if (this.player_score >= 200)
+            this.end_game("win");
+        }
       }
 
       this.enemy_hit_tiles.push([this.m_tile_x, this.m_tile_y, hit]);
+      this.enemy_attack();
     },
-    getRandomTile: function (dir) {
-      return Math.floor(Math.random() * Math.floor(dir == "x" ? 9 : 8));
+    get_random_int: function (min, max) {
+      return Math.floor(Math.random() * (max - min)) + min; // max exculuded
     },
     generate_enemy_ships: function () {
       // Get the current ship and calculate its tiles locations
@@ -295,13 +360,16 @@ export default {
         var ship_tiles = [];
 
         var current_ship = this.ships[i];
-        var random_x = this.getRandomTile("x");
-        var random_y = this.getRandomTile("y");
+        var random_x = this.get_random_int(0, 10);
+        var random_y = this.get_random_int(0, 10);
+        // Rotate the ship randomly
+        if (this.get_random_int(0, 2))
+          current_ship = [current_ship[1], current_ship[0]];
 
         var width = current_ship[0];
         var height = current_ship[1];
         // Only allow ships which fits the sea
-        if (random_x + width <= this.sea_tile_x && random_y + height <= this.sea_tile_y)
+        if (random_x + width <= 10 && random_y + height <= this.sea_tile_y)
           ship_tiles = this.get_current_ship_tiles(current_ship, random_x, random_y);
 
         // If no ship tile is generated (random values
@@ -320,24 +388,154 @@ export default {
         this.enemy_ship_locations.push(ship_location);
       }
     },
-    place_attack_ship: function () {
+    is_already_hit: function (tile_x, tile_y) {
+      // Check that tile is already hit
+      for (let i = 0; i < this.hit_tiles.length; i++)
+        if (tile_x == this.hit_tiles[i][0] && tile_y == this.hit_tiles[i][1])
+          return true;
+      return false;
+    },
+    enemy_predict: function (tile_x, tile_y, directions, check_similar) {
+      var predicted_x = tile_x;
+      var predicted_y = tile_y;
+      if (directions.length >= 1)
+      {
+        // Check last four move, if there is any move
+        // which hits any ship, try to find a pattern
+        // or hit an adjacent tile.
+        for (let i = 1; i <= 4 && this.hit_tiles.length >= i; i++)
+        {
+          var last_hit = this.hit_tiles[this.hit_tiles.length - i];
+          if (last_hit[2] == 1)
+          {
+            // If similar history is exist, choose the same direction.
+            var similar_found = false;
+            if (check_similar)
+            {
+              for (let j = 1; j <= 4 && this.hit_tiles.length >= i + j; j++)
+              {
+                var previous_hit = this.hit_tiles[this.hit_tiles.length - i - j];
+                if (previous_hit[2] == 1)
+                {
+                  // Get the difference of those two moves,
+                  var diff_x = previous_hit[0] - last_hit[0];
+                  var diff_y = previous_hit[1] - last_hit[1];
+                  // If they are adjacent tiles,
+                  // hit a tile in the same direction.
+                  if (Math.abs(diff_x) + Math.abs(diff_y) == 1)
+                  {
+                    similar_found = true;
+                    check_similar = false;
+                    // Try going forward to last hit's direction.
+                    // It may hit another tile, in that case, next iteration
+                    // will find the same direction again.
+                    predicted_x = last_hit[0] - diff_x;
+                    predicted_y = last_hit[1] - diff_y;
+
+                    // Or tile may be empty and in the next iteration
+                    // same tiles and direction will be found from history.
+                    // This time since next tile in last hit's direction is already
+                    // hit, try to go in backwards direction to prev's direction.
+                    if (this.is_already_hit(predicted_x, predicted_y))
+                    {
+                      predicted_x = previous_hit[0] + diff_x;
+                      predicted_y = previous_hit[1] + diff_y;
+                    }
+                  }
+                }
+              }
+            }
+
+            // If there is no similarity found in the history,
+            // Select an adjacent tile to last hit location.
+            if (similar_found == false)
+            {
+              check_similar = false;
+              // 0 right, 1 left, 2 up, 3 down
+              var direction = directions[this.get_random_int(0, directions.length)];
+              switch(direction) {
+                case 0:
+                  predicted_x = last_hit[0] + 1;
+                  predicted_y = last_hit[1];
+                  break;
+                case 1:
+                  predicted_x = last_hit[0] - 1;
+                  predicted_y = last_hit[1];
+                  break;
+                case 2:
+                  predicted_x = last_hit[0];
+                  predicted_y = last_hit[1] - 1;
+                  break;
+                case 3:
+                  predicted_x = last_hit[0];
+                  predicted_y = last_hit[1] + 1;
+                  break;
+              }
+              // Remove the selected direction, so if this move
+              // is not valid, next iteration will not try it.
+              directions.splice(directions.indexOf(direction), 1);
+            }
+
+            // Check that tile is inside the sea
+            if (predicted_x < 21 && predicted_x > 10 && predicted_y < 10 && predicted_y > -1)
+            {
+              // Check that tile is already hit
+              if (this.is_already_hit(predicted_x, predicted_y))
+                  return this.enemy_predict(tile_x, tile_y, directions, check_similar);
+              return [predicted_x, predicted_y];
+            }
+            else
+              return this.enemy_predict(tile_x, tile_y, directions, check_similar);
+          }
+        }
+      }
+
+      // Check that tile is already hit
+      if (this.is_already_hit(predicted_x, predicted_y))
+          return this.enemy_predict(this.get_random_int(11, 21), this.get_random_int(0, 10), directions, check_similar);
+      return [tile_x, tile_y];
+    },
+    enemy_attack: function () {
+      var prediction = this.enemy_predict(this.get_random_int(11, 21),
+       this.get_random_int(0, 10), [0, 1, 2, 3], true);
+      var tile_x = prediction[0];
+      var tile_y = prediction[1];
+
+      // Check any ship is hit,
+      // If it is, make that tile hit.
+      var hit = 0;
+      var ship_tiles = this.get_ship_tiles(this.ship_locations);
+      for (let i = 0; i < ship_tiles.length; i++)
+      {
+        var ship_tile = ship_tiles[i];
+        if (tile_x == ship_tile[0] && tile_y == ship_tile[1])
+        {
+          hit = 1;
+          this.enemy_score += 10;
+          // If enemy reaches 200 score, finish game
+          if (this.enemy_score >= 200)
+            this.end_game("lose");
+        }
+      }
+
+      this.hit_tiles.push([tile_x, tile_y, hit]);
+    },
+    place_attack_ship: function (e) {
       if (this.cannot_place == false)
-        this.place_ship();
+      {
+        if (e.button == 1)
+          this.ships_rotated = !this.ships_rotated;
+        else
+          this.place_ship()
+      }
       else if (this.cannot_attack == false)
         this.attack();
     }
   },
   created() {
     // Load every tile image
-    this.images.forEach(image => {
-      const img = new Image();
-      img.src = "./assets/zhips/" + image + ".png";
-      img.onload = () => {
-        this.images_.push(img);
-        if (this.images_loaded())
-          this.clear_sea();
-      };
-    });
+    // load_image is a recursive function.
+    this.load_image(this.images[0]);
   },
   mounted() {
     // Create a high dpi canvas
@@ -368,6 +566,26 @@ export default {
 #instructions {
   text-align: center;
   font-size: 20px;
+}
+#game_state {
+  color: blue;
+  text-align: center;
+  font-size: 30px;
+  padding-top: 10px;
+}
+#scores {
+  text-align: center;
+  font-size: 30px;
   padding-bottom: 10px;
+}
+#player_score {
+  color: green;
+  display: inline-block;
+  margin: 0px 240px;
+}
+#enemy_score {
+  color: red;
+  display: inline-block;
+  margin: 0px 240px;
 }
 </style>
