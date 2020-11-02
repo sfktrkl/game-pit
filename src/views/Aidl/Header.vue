@@ -1,10 +1,9 @@
 <template>
   <nav>
     <ul>
-      <li><router-link to="/" exact>Home</router-link></li>
-      <li><router-link to="/Zneyk" exact>Zneyk</router-link></li>
-      <li><router-link to="/Zhips" exact>Zhips</router-link></li>
-      <li><router-link to="/Aidl" exact>Aidl</router-link></li>
+      <li><router-link to="/Aidl/adventure" exact>Adventure</router-link></li>
+      <li><router-link to="/Aidl/char" exact>Character</router-link></li>
+      <li><router-link to="/Aidl/shop" exact>Shop</router-link></li>
       </ul>
   </nav>
 </template>
@@ -25,7 +24,7 @@ a {
   padding: 6px;
 }
 nav {
-  background: green;
+  background: blue;
   padding: 16px 0;
 }
 .router-link-active{

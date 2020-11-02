@@ -18,6 +18,29 @@ const routes = [
         component: () => import('../views/Zhips.vue')
     },
     {
+        path: '/Aidl',
+        name: 'Aidl Adventure',
+        component: () => import('../views/Aidl/Main.vue'),
+        redirect: '/Aidl/adventure',
+        children: [
+            {
+                path: 'adventure',
+                name: 'Adventure',
+                component: () => import('../views/Aidl/Adventure.vue'),
+            },
+            {
+                path: 'char',
+                name: 'Character',
+                component: () => import('../views/Aidl/Character.vue')
+            },
+            {
+                path: 'shop',
+                name: 'Shop',
+                component: () => import('../views/Aidl/Shop.vue'),
+            }
+        ]
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'Not Found',
         component: () => import("../views/NotFound.vue")
