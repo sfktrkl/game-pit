@@ -4,31 +4,31 @@
 
     <div id="info">
         <div id="name">Name
-          <div>{{name}}</div>
+          <div>{{aidl.name}}</div>
         </div>
 
         <div id="level">Level
-          <div>{{level}}</div>
+          <div>{{aidl.level}}</div>
         </div>
 
         <div id="experience">Experience
           <div id="bar">
-            <div id="bar-text">{{experience}}/{{maxExperience}}</div>
-            <div id="bar-fill" :style="{background: 'cyan', width: experience + '%'}"></div>
+            <div id="bar-text">{{aidl.experience[0]}}/{{aidl.experience[1]}}</div>
+            <div id="bar-fill" :style="{background: 'cyan', width: aidl.experience[0] / aidl.experience[1] * 100 + '%'}"></div>
           </div>
         </div>
 
         <div id="health">Health
           <div id="bar">
-            <div id="bar-text">{{health}}/{{maxHealth}}</div>
-            <div id="bar-fill" :style="{background: 'red', width: health + '%'}"></div>
+            <div id="bar-text">{{aidl.health[0]}}/{{aidl.health[1]}}</div>
+            <div id="bar-fill" :style="{background: 'red', width: aidl.health[0] / aidl.health[1] * 100 + '%'}"></div>
           </div>
         </div>
 
         <div id="stamina">Stamina
           <div id="bar">
-            <div id="bar-text">{{stamina}}/{{maxStamina}}</div>
-            <div id="bar-fill" :style="{background: 'yellow', width: stamina + '%'}"></div>
+            <div id="bar-text">{{aidl.stamina[0]}}/{{aidl.stamina[1]}}</div>
+            <div id="bar-fill" :style="{background: 'yellow', width: aidl.stamina[0] / aidl.stamina[1] * 100 + '%'}"></div>
           </div>
         </div>
     </div>
@@ -44,19 +44,9 @@ export default {
   components: {
     'aidl-header': Header
   },
-  data () {
-    return {
-      // Character name
-      name: 'Noob',
-
-      // Level and stats
-      level: 1,
-      maxExperience: 100,
-      experience: 0,
-      maxHealth: 100,
-      health: 100,
-      maxStamina: 100,
-      stamina: 100
+  computed: {
+    aidl: function () {
+      return this.$store.state.aidl;
     }
   }
 }

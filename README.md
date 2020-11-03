@@ -1,6 +1,7 @@
 # Game Pit
 
 ## Setup and Build
+
 ```
 # install dependencies
 npm install
@@ -16,4 +17,7 @@ npm run lint
 
 # Vue router
 npm i vue-router@next
+
+# Vuex
+npm i vuex@next
 ```

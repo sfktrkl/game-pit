@@ -3,14 +3,18 @@
       Adventure
       <div id="info">
         Adventure Level 1
-        <button>Go to Adventure</button>
+        <button @click="gainExperience()">Go to Adventure</button>
       </div>
   </div>
 </template>
 
 <script>
 export default {
-
+  methods: {
+    gainExperience: function () {
+      this.$store.commit('gainExperience', 10);
+    }
+  }
 }
 </script>
 
