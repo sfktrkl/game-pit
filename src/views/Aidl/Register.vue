@@ -2,22 +2,23 @@
   <div id="register">
     <div id="error" v-if="error">{{error}}</div>
     <form @submit.prevent="submit">
-        <label for="name">Name</label>
-        <div id="input"><input type="name" v-model="form.name" required /></div>
+      <label for="name">Name</label>
+      <div id="input"><input type="name" v-model="form.name" required /></div>
 
-        <label for="email">Email</label>
-        <div id="input"><input type="email" v-model="form.email" required /></div>
+      <label for="email">Email</label>
+      <div id="input"><input type="email" v-model="form.email" required /></div>
 
-        <label for="password">Password</label>
-        <div id="input"><input type="password" v-model="form.password" required /></div>
+      <label for="password">Password</label>
+      <div id="input"><input type="password" v-model="form.password" required /></div>
 
-        <div id="submit"><button type="submit">Register</button></div>
+      <div id="submit"><button type="submit">Register</button></div>
     </form>
   </div>
 </template>
 
 <script>
-import { firebase } from '@firebase/app';
+import * as fb from '@/firebase'
+import mixin from './mixin'
 
 export default {
   data() {
@@ -32,14 +33,22 @@ export default {
   },
   methods: {
     submit() {
-      firebase.auth()
+      fb.auth
         .createUserWithEmailAndPassword(this.form.email, this.form.password)
-        .then(data => { data.user.updateProfile({ displayName: this.form.name })
-        .then(() => { this.$store.commit('set_name', this.form.name) })
-        .then(() => { this.$router.replace({ name: "Adventure" }); }) })
-        .catch(err => { this.error = err.message; });
+        .then(data => { 
+          // After signing up, use user's information to set the game state (default state)
+          this.$store.commit('reset_aidl', { name: this.form.name, aidl: null });
+          // Also, send this information to database, to create user's first game save basically.
+          fb.db.ref(data.user.uid).set(this.aidl);
+        })
+          // Redirect to Adventure page, so user can start the game.
+          .then(() => { this.$router.replace({ name: "Adventure" }); })
+          .catch(err => { this.error = err.message; });
     }
-  }
+  },
+  mixins: [
+    mixin
+  ]
 }
 </script>
 

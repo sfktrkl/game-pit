@@ -41,17 +41,40 @@
 
 <script>
 import Header from './Header.vue';
+import * as fb from '@/firebase'
+import mixin from './mixin'
 
 export default {
   components: {
     'aidl-header': Header
   },
-  computed: {
-    aidl: function () {
-      return this.$store.state.aidl;
-    },
-    user: function () {
-      return this.$store.state.user;
+  mixins: [
+    mixin
+  ],
+  updated() {
+    if (this.user.uid)
+    {
+      // When game state is empty but a user is logged in,
+      // (user may refresh the page while playing)
+      // get user's data from database to set game state.
+      if (this.aidl.name == '' && this.user.uid)
+      {
+        // Get user's data from database
+        fb.db.ref(this.user.uid).once('value')
+          // Set the game state with this data.
+          .then(data => { this.$store.commit('reset_aidl', { name: data.val().name, aidl: data.val() }); })
+          // Redirect to Adventure page.
+          .then(() => { this.$router.replace({ name: "Adventure" }) })
+          .catch(err => { this.error = err.message; })
+      }
+      // If game state is already set up (user is playing),
+      // in each update, send the game state to
+      // database. So in each move, database can be
+      // store the updated information.
+      else if (this.aidl.name != '')
+      {
+        fb.db.ref(this.user.uid).set(this.aidl);
+      }
     }
   }
 }

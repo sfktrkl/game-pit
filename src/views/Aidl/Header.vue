@@ -16,7 +16,8 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import * as fb from '@/firebase'
+import mixin from './mixin'
 
 export default {
   data() {
@@ -28,16 +29,20 @@ export default {
       error: null
     };
   },
-  computed: {
-    user: function () {
-      return this.$store.state.user;
-    }
-  },
   methods: {
     sign_out() {
-      firebase.auth().signOut().then(() => { this.$router.replace({ name: "Login" }); });
+      fb.auth.signOut()
+        // After sign out, send aidl state to database(like save and exit).
+        .then(() => { fb.db.ref(this.user.uid).set(this.aidl)
+        // Reset the state, since there should be no information about game, after logging out.
+        .then(() => { this.$store.commit('reset_aidl', { name: null, aidl: null }) })
+        // Redirect to login page, since user just signed out and there is nothing to show.
+        .then(() => { this.$router.replace({ name: "Login" }) }) });
     }
-  }
+  },
+  mixins: [
+    mixin
+  ]
 };
 </script>
 

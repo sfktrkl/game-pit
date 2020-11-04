@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import * as fb from '@/firebase'
 
 export default {
   data() {
@@ -28,8 +28,13 @@ export default {
   },
   methods: {
     submit() {
-      firebase.auth().signInWithEmailAndPassword(this.form.email, this.form.password)
-        .then(() => { this.$router.replace({ name: "Adventure" }); })
+      fb.auth.signInWithEmailAndPassword(this.form.email, this.form.password)
+        // Once signed in, use user id to fetch data.
+        .then(data => { fb.db.ref(data.user.uid).once('value')
+        // Reset the game state with data taken from database.
+        .then(data => { this.$store.commit('reset_aidl', { name: data.val().name, aidl: data.val() }); }) })
+        // Redirect to Adventure page, since game should start.
+        .then(() => { this.$router.replace({ name: "Adventure" }) })
         .catch(err => { this.error = err.message; });
     }
   }
