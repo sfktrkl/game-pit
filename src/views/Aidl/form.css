@@ -1,0 +1,27 @@
+#login, #register {
+  margin: 10px;
+  text-align: center;
+  font-family: "Arial Black", Gadget, sans-serif;
+}
+#error {
+  margin: 5px 0px;
+  color: red;
+}
+#input, #submit {
+  margin: 5px 0px;
+}
+#submit button {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  font-size: 16px;
+  transition: 0.3s;
+  opacity: 0.75;
+  cursor: pointer;
+  display: block;
+  margin: auto;
+}
+#submit button:hover {
+  opacity: 1;
+}

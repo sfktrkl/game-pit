@@ -21,7 +21,7 @@ const routes = [
         path: '/Aidl',
         name: 'Aidl Adventure',
         component: () => import('../views/Aidl/Main.vue'),
-        redirect: '/Aidl/adventure',
+        redirect: '/Aidl/Login',
         children: [
             {
                 path: 'adventure',
@@ -37,7 +37,17 @@ const routes = [
                 path: 'shop',
                 name: 'Shop',
                 component: () => import('../views/Aidl/Shop.vue'),
-            }
+            },
+            {
+                path: 'login',
+                name: 'Login',
+                component: () => import('../views/Aidl/Login.vue'),
+            },
+            {
+                path: 'register',
+                name: 'Register',
+                component: () => import('../views/Aidl/Register.vue'),
+            },
         ]
     },
     {

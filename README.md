@@ -20,4 +20,7 @@ npm i vue-router@next
 
 # Vuex
 npm i vuex@next
+
+# Firebase
+npm i firebase
 ```

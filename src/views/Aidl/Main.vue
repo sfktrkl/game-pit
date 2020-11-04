@@ -2,36 +2,38 @@
   <div>
     <aidl-header></aidl-header>
 
-    <div id="info">
-        <div id="name">Name
-          <div>{{aidl.name}}</div>
-        </div>
-
-        <div id="level">Level
-          <div>{{aidl.level}}</div>
-        </div>
-
-        <div id="experience">Experience
-          <div id="bar">
-            <div id="bar-text">{{aidl.experience[0]}}/{{aidl.experience[1]}}</div>
-            <div id="bar-fill" :style="{background: 'cyan', width: aidl.experience[0] / aidl.experience[1] * 100 + '%'}"></div>
+    <template v-if="user.loggedIn">
+      <div id="info">
+          <div id="name">Name
+            <div>{{aidl.name}}</div>
           </div>
-        </div>
 
-        <div id="health">Health
-          <div id="bar">
-            <div id="bar-text">{{aidl.health[0]}}/{{aidl.health[1]}}</div>
-            <div id="bar-fill" :style="{background: 'red', width: aidl.health[0] / aidl.health[1] * 100 + '%'}"></div>
+          <div id="level">Level
+            <div>{{aidl.level}}</div>
           </div>
-        </div>
 
-        <div id="stamina">Stamina
-          <div id="bar">
-            <div id="bar-text">{{aidl.stamina[0]}}/{{aidl.stamina[1]}}</div>
-            <div id="bar-fill" :style="{background: 'yellow', width: aidl.stamina[0] / aidl.stamina[1] * 100 + '%'}"></div>
+          <div id="experience">Experience
+            <div id="bar">
+              <div id="bar-text">{{aidl.experience[0]}}/{{aidl.experience[1]}}</div>
+              <div id="bar-fill" :style="{background: 'cyan', width: aidl.experience[0] / aidl.experience[1] * 100 + '%'}"></div>
+            </div>
           </div>
-        </div>
-    </div>
+
+          <div id="health">Health
+            <div id="bar">
+              <div id="bar-text">{{aidl.health[0]}}/{{aidl.health[1]}}</div>
+              <div id="bar-fill" :style="{background: 'red', width: aidl.health[0] / aidl.health[1] * 100 + '%'}"></div>
+            </div>
+          </div>
+
+          <div id="stamina">Stamina
+            <div id="bar">
+              <div id="bar-text">{{aidl.stamina[0]}}/{{aidl.stamina[1]}}</div>
+              <div id="bar-fill" :style="{background: 'yellow', width: aidl.stamina[0] / aidl.stamina[1] * 100 + '%'}"></div>
+            </div>
+          </div>
+      </div>
+    </template>
 
     <router-view></router-view>
   </div>
@@ -47,6 +49,9 @@ export default {
   computed: {
     aidl: function () {
       return this.$store.state.aidl;
+    },
+    user: function () {
+      return this.$store.state.user;
     }
   }
 }
