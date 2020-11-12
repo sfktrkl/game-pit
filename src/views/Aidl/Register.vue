@@ -2,13 +2,13 @@
   <div id="register">
     <div id="error" v-if="error">{{error}}</div>
     <form @submit.prevent="submit">
-      <label for="name">Name</label>
+      <label>Name</label>
       <div id="input"><input type="name" v-model="form.name" required /></div>
 
-      <label for="email">Email</label>
+      <label>Email</label>
       <div id="input"><input type="email" v-model="form.email" required /></div>
 
-      <label for="password">Password</label>
+      <label>Password</label>
       <div id="input"><input type="password" v-model="form.password" required /></div>
 
       <div id="submit"><button type="submit">Register</button></div>

@@ -2,10 +2,10 @@
   <div id="login">
     <div id="error" v-if="error">{{error}}</div>
     <form @submit.prevent="submit">
-        <label for="email">Email</label>
+        <label>Email</label>
         <div id="input"><input type="email" v-model="form.email" required /></div>
 
-        <label for="password">Password</label>
+        <label>Password</label>
         <div id="input"><input type="password" v-model="form.password" required /></div>
 
         <div id="submit"><button type="submit">Login</button></div>
