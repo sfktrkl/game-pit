@@ -12,6 +12,10 @@
             <div>{{aidl.level}}</div>
           </div>
 
+          <div id="gold">Gold
+            <div>{{aidl.gold}}</div>
+          </div>
+
           <div id="experience">Experience
             <div id="bar">
               <div id="bar-text">{{aidl.experience[0]}}/{{aidl.experience[1]}}</div>
@@ -87,7 +91,7 @@ export default {
   text-align: center;
   font-family: "Arial Black", Gadget, sans-serif;
 }
-#name, #level, #experience, #health, #stamina {
+#name, #level, #gold, #experience, #health, #stamina {
   width: 200px;
   display: inline-block;
   margin: 0px 12px;

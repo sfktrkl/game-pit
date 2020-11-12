@@ -2,6 +2,14 @@ import { createStore } from 'vuex'
 
 const store = createStore({
   state: {
+    // Informations are used to give information to user
+    // about change of their stats. For example, when they
+    // go to an adventure, to be able to show how much
+    // experience they gained, these informations will be used.
+    // They are stored here since, these informations may be needed
+    // not only during the adventure also in the shop
+    // and character screen.
+    informations: [],
     user: {
       // When user logged in (means authentication state
       // has been changed and a user id found) update this
@@ -20,9 +28,19 @@ const store = createStore({
 
       // Level and stats
       level: 1,
+      gold: 100,
       experience: [0, 100],
       health: [100, 100],
-      stamina: [100, 100]
+      stamina: [100, 100],
+
+      attribute_point: 5,
+      // Attributes
+      intelligence: 5,  // experience gain
+      endurance: 5,     // health
+      strength: 5,      // physical power
+      dexterity: 5,     // stamina
+      charisma: 5,      // influence
+      luck: 5,          // just luck :)
     }
   },
   mutations: {
@@ -36,22 +54,11 @@ const store = createStore({
       // Or while signing out, name and aidl state has to be cleared.
       // So, check whether they are null or not accordin to these possibilities.
       if (name == null) name = '';
-      if (aidl == null) aidl = { name: '', level: 1, experience: [0, 100], health: [100, 100], stamina: [100, 100] };
+      if (aidl == null) aidl = { name: '', level: 1, gold: 100, experience: [0, 100], health: [100, 100], stamina: [100, 100],
+                                attribute_point: 5, intelligence: 5, endurance: 5, strength: 5, dexterity: 5, charisma: 5, luck: 5 };
+      state.aidl = aidl;
       state.aidl.name = name;
-      state.aidl.level = aidl.level;
-      state.aidl.experience = aidl.experience;
-      state.aidl.health = aidl.health;
-      state.aidl.stamina = aidl.stamina;
-    },
-    gain_experience: function (state, experience) {
-      state.aidl.experience[0] += experience;
-      if (state.aidl.experience[0] >= state.aidl.experience[1])
-      {
-        state.aidl.level++;
-        state.aidl.experience[0] = state.aidl.experience[0] - state.aidl.experience[1];
-        state.aidl.experience[1] = state.aidl.experience[1] * 1.05 ^ state.aidl.level;
-      }
-    },
+    }
   },
   actions: {
     fetch_user: function ({ commit }, user) {
