@@ -23,4 +23,7 @@ npm i vuex@next
 
 # Firebase
 npm i firebase
+
+# axios
+npm i axios
 ```

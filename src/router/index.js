@@ -51,6 +51,34 @@ const routes = [
         ]
     },
     {
+        path: '/Morz',
+        name: 'Morz',
+        component: () => import('../views/Morz/Main.vue'),
+        redirect: '/Morz/morse',
+        children: [
+            {
+                path: 'morse',
+                name: 'Morse code',
+                component: () => import('../views/Morz/Morse.vue'),
+            },
+            {
+                path: 'learn',
+                name: 'Learn',
+                component: () => import('../views/Morz/Learn.vue'),
+            },
+            {
+                path: 'listen',
+                name: 'Listen',
+                component: () => import('../views/Morz/Listen.vue')
+            },
+            {
+                path: 'write',
+                name: 'Write',
+                component: () => import('../views/Morz/Write.vue'),
+            }
+        ]
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'Not Found',
         component: () => import("../views/NotFound.vue")
