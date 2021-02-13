@@ -56,7 +56,7 @@
     </span>
 
     <span>
-      <button>Generate password</button>
+      <button @click.stop.prevent="generate_password()">Generate password</button>
     </span>
 
     <span>
@@ -81,6 +81,79 @@ export default {
       noDuplicateChars: true,
       noSequentialChars: true,
       password: "Generated password",
+    }
+  },
+  methods: {
+    generate_password: function () {
+
+      var chars = [];
+      chars.push("0123456789");
+      chars.push("abcdefghijkmnopqrstuvwxyz");
+      chars.push("ABCDEFGHJKLMNOPQRSTUVWXYZ");
+      chars.push(this.includeSymbols);
+
+      var allowedChars = (startWithLetter) => 
+      {
+        var allowed = "";
+        if (this.includeNumbers && !startWithLetter)
+          allowed += chars[0];
+        if (this.includeLowercase)
+          allowed += chars[1];
+        if (this.includeUppercase)
+          allowed += chars[2];
+        if (!startWithLetter)
+          allowed += chars[3];
+        return allowed;
+      };
+
+      var removeChar = (str, char) => {
+        var index = str.indexOf(char);
+        if (index != -1)
+          str = str.slice(0, index) + str.slice(index + 1);
+        return str;
+      }
+
+      var allowed = allowedChars(this.beginWithLetter);
+
+      var password = "";
+      var sequentialCharCodes = [];
+      var duplicateChars = [];
+      var similarChars = ["i", "l", "1", "L", "o", "0", "O"];
+      var random = (max) => { return Math.floor(Math.random() * max); };
+      for (let i = 0; i < this.passLength; i++)
+      {
+        if (this.noSimilarChars)
+          similarChars.forEach(char => allowed = removeChar(allowed, char));
+
+        sequentialCharCodes.forEach(charCode => allowed = removeChar(allowed, String.fromCharCode(charCode)));
+        sequentialCharCodes.length = 0;
+
+        duplicateChars.forEach(char => allowed = removeChar(allowed, char));
+
+        var randomIndex = random(allowed.length);
+        var char = allowed[randomIndex];
+        if (char == undefined)
+        {
+          this.password = "ERROR";
+          return
+        }
+
+        if (this.noSequentialChars)
+        {
+          sequentialCharCodes.push(char.charCodeAt(0) - 1);
+          sequentialCharCodes.push(char.charCodeAt(0));
+          sequentialCharCodes.push(char.charCodeAt(0) + 1);
+        }
+
+        if (this.noDuplicateChars)
+          duplicateChars.push(char);
+
+        password += char;
+
+        allowed = allowedChars(false);
+      }
+
+      this.password = password;
     }
   }
 }
