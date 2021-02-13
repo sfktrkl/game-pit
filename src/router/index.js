@@ -79,6 +79,11 @@ const routes = [
         ]
     },
     {
+        path: '/Pass',
+        name: 'Password generator',
+        component: () => import('../views/Pass.vue')
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'Not Found',
         component: () => import("../views/NotFound.vue")

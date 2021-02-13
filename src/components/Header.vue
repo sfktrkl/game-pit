@@ -6,6 +6,7 @@
       <li><router-link to="/Zhips" exact>Zhips</router-link></li>
       <li><router-link to="/Aidl" exact>Aidl</router-link></li>
       <li><router-link to="/Morz" exact>Morz</router-link></li>
+      <li><router-link to="/Pass" exact>Pass</router-link></li>
       </ul>
   </nav>
 </template>
