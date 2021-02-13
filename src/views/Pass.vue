@@ -154,6 +154,17 @@ export default {
       }
 
       this.password = password;
+      this.copy_to_clipboard(this.password);
+    },
+    copy_to_clipboard: function (str) {
+      // Create a temporary element to select it
+      // and copy its value to clipboard
+      const el = document.createElement('textarea');
+      el.value = str;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
     }
   }
 }
