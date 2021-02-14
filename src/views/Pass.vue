@@ -67,6 +67,18 @@
       <input id="encryptionIV" minlength="1" v-model="encryptionIV">
     </span>
 
+    <span v-if="encryption">
+      <label for="mail">Send mail: </label>
+      <input type="checkbox" id="mail" v-model="mail">
+    </span>
+
+    <span v-if="mail">
+      <label for="userEmail">E-mail address: </label>
+      <input id="userEmail" type="email" v-model="userEmail">
+      <label for="passwordName">Password name: </label>
+      <input id="passwordName" v-model="passwordName">
+    </span>
+
     <span>
       <button @click.stop.prevent="generate_password()">Generate password</button>
     </span>
@@ -81,6 +93,7 @@
 
 <script>
 import CryptoJS from 'crypto-js';
+import emailjs from 'emailjs-com';
 
 export default {
   data () {
@@ -102,6 +115,11 @@ export default {
       encryptionKey: "your key",
       encryptionIV: "iv",
       encryptedPassword: "Encrypted password",
+
+      // Email
+      mail: true,
+      passwordName: "Game Pit Password",
+      userEmail: "yourmail@gmail.com"
     }
   },
   methods: {
@@ -179,6 +197,9 @@ export default {
 
       if (this.encryption)
         this.encryptedPassword = this.encrypt_password(this.password, this.encryptionKey, this.encryptionIV);
+
+      if (this.encryption && this.mail)
+        this.sendEmail(this.userEmail, this.encryptedPassword, this.passwordName);
     },
     copy_to_clipboard: function (str) {
       // Create a temporary element to select it
@@ -204,6 +225,10 @@ export default {
       });
       return CryptoJS.enc.Utf8.stringify(cipher).toString();
     },
+    sendEmail: function (email, message, name) {
+      var mail = { user_email: email, message: message, pass_name: name };
+      emailjs.send(process.env.VUE_APP_EMAIL_SERVICE_ID, process.env.VUE_APP_EMAIL_TEMPLATE_ID, mail, process.env.VUE_APP_EMAIL_USER_ID);
+    }
   }
 }
 </script>
