@@ -56,17 +56,32 @@
     </span>
 
     <span>
+      <label for="encryption">Encrypt password: </label>
+      <input type="checkbox" id="encryption" v-model="encryption">
+    </span>
+
+    <span v-if="encryption">
+      <label for="encryptionKey">Encryption key: </label>
+      <input id="encryptionKey" minlength="8" maxlength="8" v-model="encryptionKey">
+      <label for="encryptionIV">Encryption iv: </label>
+      <input id="encryptionIV" minlength="1" v-model="encryptionIV">
+    </span>
+
+    <span>
       <button @click.stop.prevent="generate_password()">Generate password</button>
     </span>
 
     <span>
       <textarea v-model="password" disabled="true" ></textarea>
+      <textarea v-if="encryption" v-model="encryptedPassword" disabled="true" ></textarea>
     </span>
 
   </div>
 </template>
 
 <script>
+import CryptoJS from 'crypto-js';
+
 export default {
   data () {
     return {
@@ -81,6 +96,12 @@ export default {
       noDuplicateChars: true,
       noSequentialChars: true,
       password: "Generated password",
+
+      // Encryption
+      encryption: true,
+      encryptionKey: "your key",
+      encryptionIV: "iv",
+      encryptedPassword: "Encrypted password",
     }
   },
   methods: {
@@ -155,6 +176,9 @@ export default {
 
       this.password = password;
       this.copy_to_clipboard(this.password);
+
+      if (this.encryption)
+        this.encryptedPassword = this.encrypt_password(this.password, this.encryptionKey, this.encryptionIV);
     },
     copy_to_clipboard: function (str) {
       // Create a temporary element to select it
@@ -165,7 +189,21 @@ export default {
       el.select();
       document.execCommand('copy');
       document.body.removeChild(el);
-    }
+    },
+    encrypt_password(str, key, iv) {
+      const cipher = CryptoJS.AES.encrypt(str, CryptoJS.enc.Utf8.parse(key), {
+        iv: CryptoJS.enc.Utf8.parse(iv),
+        mode: CryptoJS.mode.CBC
+      });
+      return cipher.toString();
+    },
+    decrypt_password(str, key, iv) {
+      const cipher = CryptoJS.AES.decrypt(str, CryptoJS.enc.Utf8.parse(key), {
+        iv: CryptoJS.enc.Utf8.parse(iv),
+        mode: CryptoJS.mode.CBC
+      });
+      return CryptoJS.enc.Utf8.stringify(cipher).toString();
+    },
   }
 }
 </script>

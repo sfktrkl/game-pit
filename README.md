@@ -26,4 +26,7 @@ npm i firebase
 
 # axios
 npm i axios
+
+# CryptoJS
+npm i crypto-js
 ```
