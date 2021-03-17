@@ -7,6 +7,7 @@
       <li><router-link to="/Aidl" exact>Aidl</router-link></li>
       <li><router-link to="/Morz" exact>Morz</router-link></li>
       <li><router-link to="/Pass" exact>Pass</router-link></li>
+      <li><router-link to="/Chat" exact>Chat</router-link></li>
       </ul>
   </nav>
 </template>
