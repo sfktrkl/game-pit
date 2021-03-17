@@ -1,2 +1,2 @@
-import app from "../src/views/Poztman/server";
+import app from "../src/views/Chat/server";
 export default app;
