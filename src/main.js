@@ -4,6 +4,9 @@ import Router from './router'
 import Store from './store'
 import { auth } from './firebase'
 
+// For header bar
+import '@fortawesome/fontawesome-free/css/all.css'
+
 // Fetch user when authentication state is changed
 // (to be able to get the state of login and user id info.)
 auth.onAuthStateChanged(user => {

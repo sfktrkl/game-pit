@@ -29,4 +29,7 @@ npm i axios
 
 # CryptoJS
 npm i crypto-js
+
+# Font Awesome
+npm i @fortawesome/fontawesome-free
 ```
