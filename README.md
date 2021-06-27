@@ -32,4 +32,10 @@ npm i crypto-js
 
 # Font Awesome
 npm i @fortawesome/fontawesome-free
+
+# body-parser
+npm i body-parser
+
+# xlsx
+npm i xlsx
 ```
