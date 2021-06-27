@@ -1,7 +1,7 @@
 <template>
   <div class="pass">
 
-    <h1>Password Generator</h1>
+    <div id="name">Password Generator</div>
 
     <span>
       <label for="passLength">Password Length: </label>
@@ -9,44 +9,44 @@
     </span>
 
     <span>
-      <label for="includeNumbers">Include Numbers: </label>
       <input type="checkbox" id="includeNumbers" v-model="includeNumbers">
+      <label for="includeNumbers">Include Numbers: </label>
       <label for="includeNumbers">(e.g. 123456)</label>
     </span>
 
     <span>
-      <label for="includeLowercase">Include Lowercase Characters: </label>
       <input type="checkbox" id="includeLowercase" v-model="includeLowercase">
+      <label for="includeLowercase">Include Lowercase Characters: </label>
       <label for="includeLowercase">(e.g. abcdefgh)</label>
     </span>
 
     <span>
-      <label for="includeUppercase">Include Uppercase Characters: </label>
       <input type="checkbox" id="includeUppercase" v-model="includeUppercase">
+      <label for="includeUppercase">Include Uppercase Characters: </label>
       <label for="includeUppercase">(e.g. ABCDEFGH)</label>
     </span>
 
     <span>
-      <label for="beginWithLetter">Begin With A Letter: </label>
       <input type="checkbox" id="beginWithLetter" v-model="beginWithLetter">
+      <label for="beginWithLetter">Begin With A Letter: </label>
       <label for="beginWithLetter">(don't begin with a number or symbol)</label>
     </span>
 
     <span>
-      <label for="noSimilarChars">No Similar Characters: </label>
       <input type="checkbox" id="noSimilarChars" v-model="noSimilarChars">
+      <label for="noSimilarChars">No Similar Characters: </label>
       <label for="noSimilarChars">(don't use characters like i, l, 1, L, o, 0, O, etc.)</label>
     </span>
 
     <span>
-      <label for="noDuplicateChars">No Duplicate Characters: </label>
       <input type="checkbox" id="noDuplicateChars" v-model="noDuplicateChars">
+      <label for="noDuplicateChars">No Duplicate Characters: </label>
       <label for="noDuplicateChars">(don't use the same character more than once)</label>
     </span>
 
     <span>
-      <label for="noSequentialChars">No Sequential Characters: </label>
       <input type="checkbox" id="noSequentialChars" v-model="noSequentialChars">
+      <label for="noSequentialChars">No Sequential Characters: </label>
       <label for="noSequentialChars">(don't use sequential characters, e.g. abc, 789)</label>
     </span>
 
@@ -56,26 +56,26 @@
     </span>
 
     <span>
-      <label for="encryption">Encrypt password: </label>
       <input type="checkbox" id="encryption" v-model="encryption">
+      <label for="encryption">Encrypt password: </label>
     </span>
 
     <span v-if="encryption">
       <label for="encryptionKey">Encryption key: </label>
       <input id="encryptionKey" minlength="8" maxlength="8" v-model="encryptionKey">
-      <label for="encryptionIV">Encryption iv: </label>
+      <label for="encryptionIV"> Encryption iv: </label>
       <input id="encryptionIV" minlength="1" v-model="encryptionIV">
     </span>
 
     <span v-if="encryption">
-      <label for="mail">Send mail: </label>
       <input type="checkbox" id="mail" v-model="mail">
+      <label for="mail">Send mail: </label>
     </span>
 
     <span v-if="mail">
       <label for="userEmail">E-mail address: </label>
       <input id="userEmail" type="email" v-model="userEmail">
-      <label for="passwordName">Password name: </label>
+      <label for="passwordName"> Password name: </label>
       <input id="passwordName" v-model="passwordName">
     </span>
 
@@ -84,8 +84,10 @@
     </span>
 
     <span>
-      <textarea v-model="password" disabled="true" ></textarea>
-      <textarea v-if="encryption" v-model="encryptedPassword" disabled="true" ></textarea>
+      <label class="passLabel" for="password">Generated password</label>
+      <textarea id="password" v-model="password" disabled="true" ></textarea>
+      <label class="passLabel" for="encryptedPassword">Encrypted password</label>
+      <textarea id="encryptedPassword" v-if="encryption" v-model="encryptedPassword" disabled="true" ></textarea>
     </span>
 
   </div>
@@ -235,11 +237,40 @@ export default {
 
 <style scoped>
 .pass {
-  margin: 10px;
+  margin: auto;
+  width: 30%;
+}
+#name {
+  text-align: center;
+  font-size: 50px;
+  margin: 0;
 }
 span {
-    display: inline-block;
-    line-height: 2rem;
-    width: 100%;
+  display: inline-block;
+  line-height: 2rem;
+  width: 100%;
+}
+button {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  font-size: 16px;
+  transition: 0.3s;
+  opacity: 0.75;
+  cursor: pointer;
+  display: block;
+  margin: 12px auto;
+}
+button:hover {
+  opacity: 1;
+}
+textarea {
+  resize: none;
+  width: 100%;
+}
+.passLabel {
+  display: block;
+  text-align: center;
 }
 </style>
