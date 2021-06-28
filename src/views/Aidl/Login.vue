@@ -1,5 +1,6 @@
 <template>
   <div id="login">
+    <div id="name">Login</div>
     <div id="error" v-if="error">{{error}}</div>
     <form @submit.prevent="submit">
         <label>Email</label>

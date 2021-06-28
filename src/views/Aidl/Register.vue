@@ -1,5 +1,6 @@
 <template>
   <div id="register">
+    <div id="name">Register</div>
     <div id="error" v-if="error">{{error}}</div>
     <form @submit.prevent="submit">
       <label>Name</label>

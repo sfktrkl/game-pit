@@ -1,5 +1,6 @@
 <template>
   <div id="chat">
+    <div id="name">Chat</div>
     <div v-if="!login">
       <div id="form">
         <form @submit.prevent="joinRoom()">
@@ -101,6 +102,12 @@ export default {
   margin-right: 50px;
   font-family: "Arial Black", Gadget, sans-serif;
 }
+#name {
+  text-align: center;
+  font-family: none;
+  line-height: 60px;
+  font-size: 50px;
+}
 #input {
   margin: 5px 0px;
 }
@@ -118,7 +125,7 @@ export default {
 }
 #form {
   text-align: center;
-  margin: 20px;
+  margin: 0px 20px;
 }
 #room {
   font-size: 120%;
