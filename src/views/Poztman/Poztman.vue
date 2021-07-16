@@ -124,6 +124,7 @@ export default {
       request: {},
 
       response: "",
+      responseData: {},
       originalResponse: "",
 
       text: "",
@@ -132,34 +133,82 @@ export default {
     }
   },
   methods: {
-    updateResponseText: function(text) {
-      let s = text;
-      if (s.charAt(0) == "\"")
+    makeIndent: function(indent) {
+      let s = "";
+      for (let i = 0; i < indent; i++)
+        s += "&nbsp&nbsp&nbsp&nbsp";
+      return s;
+    },
+    iterateEntries: function(text, indent, data, bracket) {
+      let firstEntry = true;
+      let newIndent = indent + 1;
+      text += this.makeIndent(indent) + bracket[0] + "<br>";
+      Object.entries(data).forEach((item) =>
       {
+        if (!firstEntry)
+        {
+          text += ",";
+          text += "<br>";
+        }
+        firstEntry = false;
+        if (Array.isArray(item[1]))
+        {
+          text += this.makeIndent(newIndent);
+          text += "<span style=\"color: #ff0d0d; font-weight: bold\">\"" + item[0] + "\": </span>";
+          text += "<br>";
+          text = this.iterateEntries(text, newIndent, item[1], ["[", "]"]);
+        }
+        else if (typeof(item[1]) === "object")
+        {
+          text = this.iterateEntries(text, newIndent, item[1], ["{", "}"]);
+        }
+        else
+        {
+          text += this.makeIndent(newIndent);
+          let item0 = "<span style=\"color: #ff0d0d; font-weight: bold\">\"" + item[0] + "\": </span>";
+          let item1 = "";
+          if (typeof(item[1]) === "string")
+            item1 = "<span style=\"color: #0d5eff; font-weight: bold\">\"" + item[1] + "\"</span>";
+          if (typeof(item[1]) === "number")
+            item1 = "<span style=\"color: green; font-weight: bold\">" + item[1] + "</span>";
+          text += item0 + item1;
+        }
+      });
+      text += "<br>";
+      text += this.makeIndent(indent) + bracket[1];
+      return text;
+    },
+    updateResponseText: function(data, text) {
+      let s = "";
+      let indent = 0;
+      if (text.charAt(0) == "\"")
+      {
+        s = text;
         s = s.slice(1);
         s = s.slice(0, -1);
       }
-      if (!this.raw)
-      {
-        s = s.replaceAll('\n', '<br>');
-        s = s.replaceAll(' ', '&nbsp');
-      }
+      else if (text.charAt(0) != "\"" && !this.raw)
+        s = this.iterateEntries(s, indent, data, ["{", "}"]);
+      else
+        s = text;
       return s;
     },
     useResponse: function(data) {
+      this.responseData = data;
       this.originalResponse = JSON.stringify(data, null, 4);
-      this.response = this.updateResponseText(this.originalResponse);
+      this.response = this.updateResponseText(data, this.originalResponse);
     },
     updateResponseState: function(event, state) {
       this.raw = state;
       document.getElementsByClassName("responseState").forEach(element => {
         element.classList.toggle('active');
       });
-      this.response = this.updateResponseText(this.originalResponse);
+      this.response = this.updateResponseText(this.responseData, this.originalResponse);
     },
     updateRequest: function(request) {
       this.response = "";
       this.originalResponse = "";
+      this.responseData = {};
       this.request = request;
       this.url2 = request.url;
 
