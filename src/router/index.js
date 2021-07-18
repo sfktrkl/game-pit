@@ -94,6 +94,44 @@ const routes = [
         component: () => import('../views/Poztman/Poztman.vue')
     },
     {
+        path: '/Vizion',
+        name: 'Vizion',
+        component: () => import('../views/Vizion/Main.vue'),
+        redirect: '/Vizion/vizion',
+        children: [
+            {
+                path: 'vizion',
+                name: 'Vizion',
+                component: () => import('../views/Vizion/Vizion.vue'),
+            },
+            {
+                path: 'hand',
+                name: 'Hand tracking',
+                component: () => import('../views/Vizion/Hand.vue'),
+            },
+            {
+                path: 'pose',
+                name: 'Pose estimation',
+                component: () => import('../views/Vizion/Pose.vue'),
+            },
+            {
+                path: 'face',
+                name: 'Face detection',
+                component: () => import('../views/Vizion/Face.vue'),
+            },
+            {
+                path: 'mesh',
+                name: 'Face mesh',
+                component: () => import('../views/Vizion/Mesh.vue'),
+            },
+            {
+                path: 'holistic',
+                name: 'Holistic',
+                component: () => import('../views/Vizion/Holistic.vue'),
+            }
+        ]
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'Not Found',
         component: () => import("../views/NotFound.vue")

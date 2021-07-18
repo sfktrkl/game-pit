@@ -13,6 +13,7 @@
       <li><router-link to="/Pass" exact>Pass</router-link></li>
       <li><router-link to="/Chat" exact>Chat</router-link></li>
       <li><router-link to="/Poztman" exact>Poztman</router-link></li>
+      <li><router-link to="/Vizion" exact>Vizion</router-link></li>
     </ul>
   </nav>
 </template>
