@@ -1,0 +1,28 @@
+#name {
+  text-align: center;
+  font-size: 50px;
+}
+#output {
+  margin: auto;
+  display: block;
+}
+#loader {
+  z-index: -1;
+  margin: auto;
+  position: absolute;
+
+  width: 120px;
+  height: 120px;
+  margin-top: 30vh;
+  margin-left: calc(50vw - 80px);
+
+  border: 16px solid lightgray;
+  border-top: 16px solid blue;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

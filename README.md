@@ -38,4 +38,12 @@ npm i body-parser
 
 # xlsx
 npm i xlsx
+
+# Mediapipe utils
+npm i @mediapipe/camera_utils
+npm i @mediapipe/drawing_utils
+npm i @mediapipe/control_utils
+
+# Mediapipe hands
+npm i @mediapipe/hands
 ```
