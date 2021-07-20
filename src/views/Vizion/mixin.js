@@ -44,6 +44,32 @@ export default {
       canvasCtx.lineTo(lineTo.x, lineTo.y);
       canvasCtx.stroke();
     },
+    drawLines: function(outputCanvas, canvasCtx, landmarks, array, lineWidth, color) {
+      canvasCtx.lineWidth = lineWidth;
+      canvasCtx.strokeStyle = color;
+      canvasCtx.beginPath();
+      for (let i = 0; i < array.length; i++)
+      {
+        let coord = landmarks[array[i]];
+        let x = coord.x * outputCanvas.width;
+        let y = coord.y * outputCanvas.height;
+        this.canvasCtx.lineTo(x, y);
+      }
+      canvasCtx.stroke();
+    },
+    drawFill: function(outputCanvas, canvasCtx, landmarks, array, color) {
+      canvasCtx.fillStyle = color;
+      canvasCtx.beginPath();
+      for (let i = 0; i < array.length; i++)
+      {
+        let coord = landmarks[array[i]];
+        let x = coord.x * outputCanvas.width;
+        let y = coord.y * outputCanvas.height;
+        this.canvasCtx.lineTo(x, y);
+      }
+      canvasCtx.closePath();
+      canvasCtx.fill();
+    },
     drawText: function(canvasCtx, text, x, y, color = "yellow", alignment = "center") {
       canvasCtx.font = "20px Comic Sans MS";
       canvasCtx.fillStyle = color;

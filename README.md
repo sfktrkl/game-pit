@@ -52,4 +52,7 @@ npm i @mediapipe/pose
 
 # Mediapipe face detection
 npm i @mediapipe/face_detection@0.3
+
+# Mediapipe face mesh
+npm i @mediapipe/face_mesh
 ```
