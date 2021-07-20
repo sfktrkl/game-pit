@@ -49,4 +49,7 @@ npm i @mediapipe/hands
 
 # Mediapipe pose
 npm i @mediapipe/pose
+
+# Mediapipe face detection
+npm i @mediapipe/face_detection@0.3
 ```

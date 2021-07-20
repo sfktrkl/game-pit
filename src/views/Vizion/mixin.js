@@ -35,6 +35,15 @@ export default {
       // Hide loader when canvas rendered for the first time
       this.hideLoader = true;
     },
+    drawLine: function(canvasCtx, moveTo, lineTo, lineWidth, color) {
+      canvasCtx.lineWidth = lineWidth;
+      canvasCtx.strokeStyle = color;
+
+      canvasCtx.beginPath();
+      canvasCtx.moveTo(moveTo.x, moveTo.y);
+      canvasCtx.lineTo(lineTo.x, lineTo.y);
+      canvasCtx.stroke();
+    },
     drawText: function(canvasCtx, text, x, y, color = "yellow", alignment = "center") {
       canvasCtx.font = "20px Comic Sans MS";
       canvasCtx.fillStyle = color;
