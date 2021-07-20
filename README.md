@@ -46,4 +46,7 @@ npm i @mediapipe/control_utils
 
 # Mediapipe hands
 npm i @mediapipe/hands
+
+# Mediapipe pose
+npm i @mediapipe/pose
 ```
