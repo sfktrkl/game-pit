@@ -2,10 +2,25 @@
   text-align: center;
   font-size: 50px;
 }
+
+#options {
+  margin: auto;
+  text-align: center;
+}
+.option {
+  display: inline-block;
+  padding: 6px;
+}
+.optionLabel {
+  padding-right: 6px;
+  padding-left: 6px;
+}
+
 #output {
   margin: auto;
   display: block;
 }
+
 #loader {
   z-index: -1;
   margin: auto;
