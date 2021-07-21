@@ -14,6 +14,7 @@
     "@mediapipe/face_detection": "^0.3.1620248423",
     "@mediapipe/face_mesh": "^0.4.1626476802",
     "@mediapipe/hands": "^0.3.1620248595",
+    "@mediapipe/holistic": "^0.3.1620694839",
     "@mediapipe/pose": "^0.4.1624666670",
     "axios": "^0.21.0",
     "body-parser": "^1.19.0",
