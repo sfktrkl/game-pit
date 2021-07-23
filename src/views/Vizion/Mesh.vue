@@ -52,44 +52,9 @@ export default {
 
       this.drawFps();
 
-      if (results.multiFaceLandmarks) {
-        for (const landmarks of results.multiFaceLandmarks) {
-          // V
-          let headHeight = (landmarks[10].y - landmarks[152].y) * this.outputCanvas.height;
-          let lineWidth = Math.abs(headHeight / 30); // Dynamically calculate the line width, so it can fit to head.
-          let color = "#000000";
-
-          // Face
-          let face = [10, 338, 297, 332, 284, 251, 389, 356, 454, 323, 361, 288, 397, 365, 379,378, 400, 377, 152,
-          148, 176, 149, 150, 136, 172, 58, 132, 93, 234, 127, 162, 21, 54, 103, 67, 109, 10];
-          this.drawFill(this.outputCanvas, this.canvasCtx, landmarks, face, "#FFFFFF");
-
-          // Eyes
-          let leftEye = [173, 157, 158, 159, 160, 161, 246, 7, 33, 163, 144, 145, 153, 154, 155, 173];
-          this.drawFill(this.outputCanvas, this.canvasCtx, landmarks, leftEye, color);
-          let leftEyebrow = [55, 107, 69, 104, 68];
-          this.drawLines(this.outputCanvas, this.canvasCtx, landmarks, leftEyebrow, lineWidth, color);
-
-          let rightEye = [398, 384, 385, 386, 387, 388, 466, 263, 249, 390, 373, 374, 380, 381, 382, 398];
-          this.drawFill(this.outputCanvas, this.canvasCtx, landmarks, rightEye, color);
-          let rightEyebrow = [285, 336, 299, 333, 298];
-          this.drawLines(this.outputCanvas, this.canvasCtx, landmarks, rightEyebrow, lineWidth, color);
-
-          // Moustache
-          let leftMoustache = [164, 37, 39, 92, 206, 205];
-          this.drawLines(this.outputCanvas, this.canvasCtx, landmarks, leftMoustache, lineWidth, color);
-
-          let rightMoustache = [164, 267, 269, 322, 426, 425];
-          this.drawLines(this.outputCanvas, this.canvasCtx, landmarks, rightMoustache, lineWidth, color);
-
-          let mouche = [16, 17, 18, 200, 199, 175, 152];
-          this.drawLines(this.outputCanvas, this.canvasCtx, landmarks, mouche, lineWidth * 2, color);
-
-          // Lips
-          let lips = [62, 96, 89, 179, 86, 15, 316, 403, 319, 325, 292, 272, 271, 268, 12, 38, 41, 42, 62];
-          this.drawFill(this.outputCanvas, this.canvasCtx, landmarks, lips, color);
-        }
-      }
+      if (results.multiFaceLandmarks)
+        for (const landmarks of results.multiFaceLandmarks)
+          this.drawVMask(this.outputCanvas, this.canvasCtx, landmarks);
       this.canvasCtx.restore();
     },
     createSolution: function()
