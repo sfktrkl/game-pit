@@ -1,0 +1,9 @@
+.dockerignore
+.firebase
+.git
+.github
+.gitignore
+.DS_Store
+
+node_modules
+dist

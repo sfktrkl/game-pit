@@ -1,0 +1,47 @@
+name: Publish Docker image
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  docker:
+    name: Push to Docker Hub
+    runs-on: ubuntu-latest
+    env:
+      VUE_APP_EMAIL_SERVICE_ID: '${{ secrets.VUE_APP_EMAIL_SERVICE_ID }}'
+      VUE_APP_EMAIL_TEMPLATE_ID: '${{ secrets.VUE_APP_EMAIL_TEMPLATE_ID }}'
+      VUE_APP_EMAIL_USER_ID: '${{ secrets.VUE_APP_EMAIL_USER_ID }}'
+      VUE_APP_FIREBASE_API_KEY: '${{ secrets.VUE_APP_FIREBASE_API_KEY }}'
+      VUE_APP_FIREBASE_DATABASE_URL: '${{ secrets.VUE_APP_FIREBASE_DATABASE_URL }}'
+      VUE_APP_FIREBASE_STORAGE_BUCKET: '${{ secrets.VUE_APP_FIREBASE_STORAGE_BUCKET }}'
+      VUE_APP_FIREBASE_MESSAGE_SENDER_ID: '${{ secrets.VUE_APP_FIREBASE_MESSAGE_SENDER_ID }}'
+      VUE_APP_FIREBASE_APP_ID: '${{ secrets.VUE_APP_FIREBASE_APP_ID }}'
+      VUE_APP_FIREBASE_MEASUREMENT_ID: '${{ secrets.VUE_APP_FIREBASE_MEASUREMENT_ID }}'
+    
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+        
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      - name: Create environment variables
+        run: |
+          echo "VUE_APP_EMAIL_SERVICE_ID=${{ secrets.VUE_APP_EMAIL_SERVICE_ID }}" >> .env
+          echo "VUE_APP_EMAIL_TEMPLATE_ID=${{ secrets.VUE_APP_EMAIL_TEMPLATE_ID }}" >> .env
+          echo "VUE_APP_EMAIL_USER_ID=${{ secrets.VUE_APP_EMAIL_USER_ID }}" >> .env
+          echo "VUE_APP_FIREBASE_API_KEY=${{ secrets.VUE_APP_FIREBASE_API_KEY }}" >> .env
+          echo "VUE_APP_FIREBASE_DATABASE_URL=${{ secrets.VUE_APP_FIREBASE_DATABASE_URL }}" >> .env
+          echo "VUE_APP_FIREBASE_STORAGE_BUCKET=${{ secrets.VUE_APP_FIREBASE_STORAGE_BUCKET }}" >> .env
+          echo "VUE_APP_FIREBASE_MESSAGE_SENDER_ID=${{ secrets.VUE_APP_FIREBASE_MESSAGE_SENDER_ID }}" >> .env
+          echo "VUE_APP_FIREBASE_APP_ID=${{ secrets.VUE_APP_FIREBASE_APP_ID }}" >> .env
+          echo "VUE_APP_FIREBASE_MEASUREMENT_ID=${{ secrets.VUE_APP_FIREBASE_MEASUREMENT_ID }}" >> .env
+          
+      - name: Build and push
+        run: |
+          docker build -t sfktrkl/game-pit .
+          docker push sfktrkl/game-pit:latest

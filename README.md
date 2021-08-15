@@ -58,4 +58,10 @@ npm i @mediapipe/face_mesh
 
 # Mediapipe holistic
 npm i @mediapipe/holistic@0.3
+
+# Docker build
+docker build -t sfktkl/game-pit .
+
+# Docker run
+docker run -p 8000:80 sfktrkl/game-pit
 ```
