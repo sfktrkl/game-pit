@@ -1,4 +1,25 @@
-# Game Pit
+<h1 align="center">Game Pit</h1>
+
+<p align="center">
+  <a href="https://game-pit.web.app/" >
+    <img src="https://img.shields.io/github/workflow/status/sfktrkl/game-pit/Deploy%20to%20Firebase%20Hosting%20on%20merge?label=firebase" />
+  </a>
+  <a href="https://game-pit.herokuapp.com/" >
+    <img src="https://pyheroku-badge.herokuapp.com/?app=game-pit&style=flat" />
+  </a>
+  <a href="https://game-pit.web.app/Chat" >
+    <img src="https://img.shields.io/website?down_message=offline&label=chat-server&up_message=online&url=https%3A%2F%2Fgame-pit-chat-server.herokuapp.com%2F" />
+  </a>
+  <a href="https://game-pit.web.app/Poztman" >
+    <img src="https://img.shields.io/website?down_message=offline&label=poztman-server&up_message=online&url=https%3A%2F%2Fgame-pit-poztman-server.herokuapp.com%2F" />
+  </a>
+  <a href="https://hub.docker.com/r/sfktrkl/game-pit" >
+    <img src="https://img.shields.io/docker/pulls/sfktrkl/game-pit" />
+  </a>
+  <a href="https://hub.docker.com/r/sfktrkl/game-pit" >
+    <img src="https://img.shields.io/docker/image-size/sfktrkl/game-pit" />
+  </a>
+</p>
 
 ## Setup and Build
 
