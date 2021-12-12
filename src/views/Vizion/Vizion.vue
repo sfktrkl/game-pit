@@ -65,7 +65,7 @@ export default {
     createSolution: function()
     {
       this.solution = new Holistic.Holistic({locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`;
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.3.1620694839/${file}`;
       }});
       this.solution.setOptions({
         modelComplexity: this.modelComplexity,

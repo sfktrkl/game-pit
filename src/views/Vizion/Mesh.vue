@@ -60,7 +60,7 @@ export default {
     createSolution: function()
     {
       this.solution = new Mesh.FaceMesh({locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1626476802/${file}`;
       }});
       this.solution.setOptions({
         maxNumFaces: this.maxNumFaces,

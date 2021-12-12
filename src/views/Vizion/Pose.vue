@@ -95,7 +95,7 @@ export default {
     createSolution: function()
     {
       this.solution = new Pose.Pose({locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.4.1624666670/${file}`;
       }});
       this.solution.setOptions({
         modelComplexity: this.modelComplexity,

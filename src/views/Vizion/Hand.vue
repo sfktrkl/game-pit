@@ -68,7 +68,7 @@ export default {
     createSolution: function()
     {
       this.solution = new Hands.Hands({ locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.3.1620248595/${file}`;
       }});
       this.solution.setOptions({
         maxNumHands: parseFloat(this.maxNumHands),
