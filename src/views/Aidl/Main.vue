@@ -4,7 +4,7 @@
 
     <template v-if="user.loggedIn">
       <div id="info">
-          <div id="name">Name
+          <div id="character">Name
             <div>{{aidl.name}}</div>
           </div>
 
@@ -91,12 +91,12 @@ export default {
   text-align: center;
   font-family: "Arial Black", Gadget, sans-serif;
 }
-#name, #level, #gold, #experience, #health, #stamina {
+#character, #level, #gold, #experience, #health, #stamina {
   width: 200px;
   display: inline-block;
   margin: 0px 12px;
 }
-#name {
+#character {
   width: 150px;
 }
 #level {
