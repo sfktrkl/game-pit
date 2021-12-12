@@ -3,7 +3,11 @@
     <div id="name">Vizion</div>
 
     <video id="input" hidden="true"></video>
-    <div id="loader" :hidden="hideLoader"></div>
+    <div id="hint" :hidden="hideLoader">
+      <div class="inner" id="loader"></div>
+      <h3 class="center" id="hint_text">Give me the pose!</h3>
+      <img class="center inner" src="./../../../public/assets/vizion/v.jpg">
+    </div>
     <canvas id="output" :width="canvasWidth" :height="canvasHeight" @click="pauseVideo"></canvas>
 
   </div>
@@ -80,3 +84,35 @@ export default {
 </script>
 
 <style src='./form.css'></style>
+<style>
+#hint {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 100%;
+}
+
+#hint_text {
+  color:red;
+  font-size: 30px;
+}
+
+.center {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.inner {
+  position: absolute;
+  z-index: -2;
+}
+
+img {
+  max-width: 500px;
+  height: auto;
+}
+</style>
