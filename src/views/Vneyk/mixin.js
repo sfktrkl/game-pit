@@ -61,18 +61,18 @@ export default {
     drawBlocks: function()
     {
       this.blocks.forEach(block => {
-        this.drawRectangle(this.canvasCtx, block.x, block.y, this.blockWidth, this.blockHeight, "red");
+        this.drawRectangle(this.canvasCtx, block.x, block.y, this.blockSize, this.blockSize, "red");
       });
     },
     drawFood: function()
     {
       if (this.gameStarted && this.food)
-        this.drawRectangle(this.canvasCtx, this.food.x, this.food.y, this.foodWidth, this.foodHeight, "yellow");
+        this.drawRectangle(this.canvasCtx, this.food.x, this.food.y, this.foodSize, this.foodSize, "yellow");
     },
     drawMouse: function()
     {
       if (this.gameStarted == false && this.mouse)
-        this.drawRectangle(this.canvasCtx, this.mouse.x, this.mouse.y, this.blockWidth, this.blockHeight, "blue");
+        this.drawRectangle(this.canvasCtx, this.mouse.x, this.mouse.y, this.blockSize, this.blockSize, "blue");
     }
   }
 }

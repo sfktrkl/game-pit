@@ -32,13 +32,11 @@ export default {
       // Blocks
       mouse: null,
       blocks: [],
-      blockWidth: 20,
-      blockHeight: 20,
+      blockSize: 20,
 
       // Food
       food: null,
-      foodHeight: 20,
-      foodWidth: 20,
+      foodSize: 20,
 
       // Snake
       snake: [],
@@ -82,12 +80,12 @@ export default {
 
             // Reset game when a block is hit
             this.blocks.forEach(block => {
-              if (this.boundingBoxCollision(block, snakeHead, this.blockWidth, this.blockHeight))
+              if (this.boundingBoxCollision(block, snakeHead, this.blockSize, this.blockSize))
                 this.resetGame();
             });
 
             // Check whether food is eaten or not
-            if (this.boundingBoxCollision(this.food, snakeHead, this.foodWidth, this.foodHeight))
+            if (this.boundingBoxCollision(this.food, snakeHead, this.foodSize, this.foodSize))
             {
               this.allowedLength += 50
               this.score += 10;
@@ -163,8 +161,8 @@ export default {
     generateFood: function () {
       if (!this.food)
       {
-        var x = this.randomFood(0, this.outputCanvas.width - this.foodWidth);
-        var y = this.randomFood(0, this.outputCanvas.height - this.foodHeight);
+        var x = this.randomFood(0, this.outputCanvas.width - this.foodSize);
+        var y = this.randomFood(0, this.outputCanvas.height - this.foodSize);
         if (this.checkFood(x, y))
           this.food = { x: x, y: y };
         else
@@ -205,10 +203,10 @@ export default {
       // Round to nearest mouse dimensions
       // Since, positions are arranged for each 10px
       var x = e.clientX - this.outputCanvas.offsetLeft;
-      x = Math.ceil(x / this.blockWidth) * this.blockWidth - this.blockWidth;
+      x = Math.ceil(x / this.blockSize) * this.blockSize - this.blockSize;
 
       var y = e.clientY - this.outputCanvas.offsetTop;
-      y = Math.ceil(y / this.blockHeight) * this.blockHeight - this.blockHeight;
+      y = Math.ceil(y / this.blockSize) * this.blockSize - this.blockSize;
 
       if (res == 'down')
       {
