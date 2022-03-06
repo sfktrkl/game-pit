@@ -86,6 +86,12 @@ export default {
             }
             this.previousHead = currentHead;
 
+            // Reset game when a block is hit
+            this.blocks.forEach(block => {
+              if (this.checkCoordinate(block, mirrored, this.blockWidth, this.blockHeight))
+                this.resetGame();
+            });
+
             // Check whether food is eaten or not
             if (this.checkCoordinate(this.food, mirrored, this.foodWidth, this.foodHeight))
             {
@@ -98,12 +104,7 @@ export default {
         }
         else
         {
-          this.gameStarted = false;
-          this.score = 0;
-          this.snake = [],
-          this.points = [];
-          this.currentLength = 0;
-          this.allowedLength = 150;
+          this.resetGame();
         }
       });
 
@@ -120,6 +121,15 @@ export default {
       this.drawFps("black");
       this.drawText(this.canvasCtx, "Score: " + this.score, this.outputCanvas.width - 10, 30, "green", "right", "30px Comic Sans MS");
       this.canvasCtx.restore();
+    },
+    resetGame: function()
+    {
+      this.gameStarted = false;
+      this.score = 0;
+      this.snake = [],
+      this.points = [];
+      this.currentLength = 0;
+      this.allowedLength = 150;
     },
     checkCoordinate: function(coordinate, test, width, height)
     {
