@@ -41,6 +41,7 @@ export default {
 
       // Snake
       points: [],
+      snakeWidth: 12,
       currentLength: 0,
       allowedLength: 150,
     };
@@ -63,7 +64,7 @@ export default {
           this.generateFood()
           for (let landmarks of results.multiHandLandmarks) {
             let snakeHead = landmarks[8];
-            this.drawCircle(this.outputCanvas, this.canvasCtx, snakeHead, 8);
+            this.drawCircle(this.outputCanvas, this.canvasCtx, snakeHead, this.snakeWidth);
 
             let currentHead = { 
               x: snakeHead.x * this.outputCanvas.width,
@@ -75,7 +76,7 @@ export default {
             {
               this.updateSnakeLength();
               for (let i = 1; i < this.points.length; i++)
-                this.drawLine(this.canvasCtx, this.points[i], this.points[i - 1], 6, "green")
+                this.drawLine(this.canvasCtx, this.points[i], this.points[i - 1], this.snakeWidth * 0.8, "green")
             }
             this.previousHead = currentHead;
           }
