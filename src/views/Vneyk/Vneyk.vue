@@ -31,6 +31,8 @@ export default {
       // Blocks
       mouse: null,
       blocks: [],
+      blockWidth: 20,
+      blockHeight: 20,
 
       // Food
       food: null,
@@ -86,14 +88,14 @@ export default {
       });
 
       this.blocks.forEach(block => {
-        this.drawRectangle(this.canvasCtx, block.x, block.y, 10, 10, "red");
+        this.drawRectangle(this.canvasCtx, block.x, block.y, this.blockWidth, this.blockHeight, "red");
       });
 
       if (this.gameStarted && this.food)
         this.drawRectangle(this.canvasCtx, this.food.x, this.food.y, this.foodWidth, this.foodHeight, "yellow");
 
       if (this.gameStarted == false && this.mouse)
-        this.drawRectangle(this.canvasCtx, this.mouse.x, this.mouse.y, 10, 10, "blue");
+        this.drawRectangle(this.canvasCtx, this.mouse.x, this.mouse.y, this.blockWidth, this.blockHeight, "blue");
 
       this.drawFps();
       this.canvasCtx.restore();
@@ -104,8 +106,8 @@ export default {
     generateFood: function () {
       if (!this.food)
       {
-        var x = this.randomFood(0, this.outputCanvas.width - 10);
-        var y = this.randomFood(0, this.outputCanvas.height - 10);
+        var x = this.randomFood(0, this.outputCanvas.width - this.foodWidth);
+        var y = this.randomFood(0, this.outputCanvas.height - this.foodHeight);
         this.food = { x: x, y: y}
       }
     },
@@ -139,13 +141,13 @@ export default {
       if (this.gameStarted)
         return;
 
-      // Round to nearest 10
+      // Round to nearest mouse dimensions
       // Since, positions are arranged for each 10px
       var x = e.clientX - this.outputCanvas.offsetLeft;
-      x = Math.ceil(x / 10) * 10 - 10;
+      x = Math.ceil(x / this.blockWidth) * this.blockWidth - this.blockWidth;
 
       var y = e.clientY - this.outputCanvas.offsetTop;
-      y = Math.ceil(y / 10) * 10 - 30;
+      y = Math.ceil(y / this.blockHeight) * this.blockHeight - this.blockHeight;
 
       if (res == 'down')
       {
