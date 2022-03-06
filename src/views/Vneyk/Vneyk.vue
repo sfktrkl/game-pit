@@ -27,6 +27,7 @@ export default {
     return {
       // Game
       gameStarted: false,
+      score: 0,
 
       // Blocks
       mouse: null,
@@ -40,6 +41,7 @@ export default {
       foodWidth: 20,
 
       // Snake
+      snake: [],
       points: [],
       snakeWidth: 12,
       currentLength: 0,
@@ -71,6 +73,10 @@ export default {
               y: snakeHead.y * this.outputCanvas.height
             };
 
+            // Mirror point to find the position of the snake
+            let mirrored = { x: this.outputCanvas.width - currentHead.x, y: currentHead.y };
+            this.snake.push(mirrored);
+
             this.points.push(currentHead);
             if (this.points.length > 2)
             {
@@ -79,12 +85,25 @@ export default {
                 this.drawLine(this.canvasCtx, this.points[i], this.points[i - 1], this.snakeWidth * 0.8, "green")
             }
             this.previousHead = currentHead;
+
+            // Check whether food is eaten or not
+            if (this.checkCoordinate(this.food, mirrored, this.foodWidth, this.foodHeight))
+            {
+              this.allowedLength += 50
+              this.score += 10;
+              this.food = null;
+              this.generateFood();
+            }
           }
         }
         else
         {
           this.gameStarted = false;
+          this.score = 0;
+          this.snake = [],
           this.points = [];
+          this.currentLength = 0;
+          this.allowedLength = 150;
         }
       });
 
@@ -99,14 +118,21 @@ export default {
         this.drawRectangle(this.canvasCtx, this.mouse.x, this.mouse.y, this.blockWidth, this.blockHeight, "blue");
 
       this.drawFps("black");
+      this.drawText(this.canvasCtx, "Score: " + this.score, this.outputCanvas.width - 10, 30, "green", "right", "30px Comic Sans MS");
       this.canvasCtx.restore();
+    },
+    checkCoordinate: function(coordinate, test, width, height)
+    {
+      if (Math.abs(coordinate.x - test.x) < width && Math.abs(coordinate.y - test.y) < height)
+        return true;
+      return false;
     },
     randomFood: function (min, max) {
       return Math.round((Math.random() * (max-min) + min) / 10) * 10;
     },
     checkFood: function (x, y) {
       // Do not create foods on snake or blocks
-      this.points.forEach(tail => {
+      this.snake.forEach(tail => {
         if (x == tail.x && y == tail.y)
           return false;
       })

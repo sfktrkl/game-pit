@@ -70,8 +70,8 @@ export default {
       canvasCtx.closePath();
       canvasCtx.fill();
     },
-    drawText: function(canvasCtx, text, x, y, color = "yellow", alignment = "center") {
-      canvasCtx.font = "20px Comic Sans MS";
+    drawText: function(canvasCtx, text, x, y, color = "yellow", alignment = "center", font = "20px Comic Sans MS") {
+      canvasCtx.font = font;
       canvasCtx.fillStyle = color;
       canvasCtx.textAlign = alignment;
       canvasCtx.fillText(text, x, y);
