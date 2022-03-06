@@ -104,12 +104,29 @@ export default {
     randomFood: function (min, max) {
       return Math.round((Math.random() * (max-min) + min) / 10) * 10;
     },
+    checkFood: function (x, y) {
+      // Do not create foods on snake or blocks
+      this.points.forEach(tail => {
+        if (x == tail.x && y == tail.y)
+          return false;
+      })
+
+      this.blocks.forEach(block => {
+        if (x == block.x && y == block.y)
+          return false;
+      })
+
+      return true;
+    },
     generateFood: function () {
       if (!this.food)
       {
         var x = this.randomFood(0, this.outputCanvas.width - this.foodWidth);
         var y = this.randomFood(0, this.outputCanvas.height - this.foodHeight);
-        this.food = { x: x, y: y}
+        if (this.checkFood(x, y))
+          this.food = { x: x, y: y };
+        else
+          this.generateFood();
       }
     },
     calculateSnakeLength: function()
