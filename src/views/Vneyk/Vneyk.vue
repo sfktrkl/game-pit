@@ -32,6 +32,11 @@ export default {
       mouse: null,
       blocks: [],
 
+      // Food
+      food: null,
+      foodHeight: 20,
+      foodWidth: 20,
+
       // Snake
       points: [],
       currentLength: 0,
@@ -53,6 +58,7 @@ export default {
 
         if (results.multiHandLandmarks) {
           this.gameStarted = true;
+          this.generateFood()
           for (let landmarks of results.multiHandLandmarks) {
             let snakeHead = landmarks[8];
             this.drawCircle(this.outputCanvas, this.canvasCtx, snakeHead, 8);
@@ -83,11 +89,25 @@ export default {
         this.drawRectangle(this.canvasCtx, block.x, block.y, 10, 10, "red");
       });
 
+      if (this.gameStarted && this.food)
+        this.drawRectangle(this.canvasCtx, this.food.x, this.food.y, this.foodWidth, this.foodHeight, "yellow");
+
       if (this.gameStarted == false && this.mouse)
         this.drawRectangle(this.canvasCtx, this.mouse.x, this.mouse.y, 10, 10, "blue");
 
       this.drawFps();
       this.canvasCtx.restore();
+    },
+    randomFood: function (min, max) {
+      return Math.round((Math.random() * (max-min) + min) / 10) * 10;
+    },
+    generateFood: function () {
+      if (!this.food)
+      {
+        var x = this.randomFood(0, this.outputCanvas.width - 10);
+        var y = this.randomFood(0, this.outputCanvas.height - 10);
+        this.food = { x: x, y: y}
+      }
     },
     calculateSnakeLength: function()
     {
