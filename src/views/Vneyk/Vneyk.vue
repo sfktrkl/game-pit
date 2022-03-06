@@ -85,7 +85,7 @@ export default {
             });
 
             // Check whether food is eaten or not
-            if (this.boundingBoxCollision(this.food, snakeHead, this.foodSize, this.foodSize))
+            if (this.food && this.boundingBoxCollision(this.food, snakeHead, this.foodSize, this.foodSize))
             {
               this.allowedLength += 50
               this.score += 10;
@@ -112,6 +112,7 @@ export default {
     {
       this.gameStarted = false;
       this.score = 0;
+      this.food = null;
       this.snake = [],
       this.points = [];
       this.currentLength = 0;
