@@ -152,6 +152,11 @@ export default {
       canvasCtx.fill();
       canvasCtx.stroke();
     },
+    drawRectangle: function(canvasCtx, x, y, width, height, color)
+    {
+      canvasCtx.fillStyle = color;
+      canvasCtx.fillRect(x, y, width, height);
+    },
     calculateAngle: function(outputCanvas, landmarks, a, b, c)
     {
       let pt1 = { x: landmarks[a].x * outputCanvas.width, y: landmarks[a].y * outputCanvas.height };

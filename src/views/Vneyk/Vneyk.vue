@@ -2,12 +2,15 @@
   <div id="vneyk">
     <div id="name">Vneyk</div>
     <div id="instructions">
-      Vneyk is a very simple snake game.<br>
+      Vneyk is a very simple snake game. Try to eat foods, do not hit any blocks and make a good score.<br>
+      This game is using an hand tracking library, so your hand movements will guide the snake.<br>
+      Before starting the game, use left mouse button to draw blocks and middle mouse button to delete them.
     </div>
 
     <video id="input" hidden="true"></video>
     <div id="loader" :hidden="hideLoader"></div>
-    <canvas id="output" :hidden="!hideLoader" :width="canvasWidth" :height="canvasHeight" @click="pauseVideo"></canvas>
+    <canvas id="output" :hidden="!hideLoader" :width="canvasWidth" :height="canvasHeight"
+      @mousedown="updateBlocks('down', $event)" @mousemove="updateBlocks('hover', $event)" ></canvas>
 
   </div>
 </template>
@@ -22,6 +25,13 @@ import CameraUtils from '@mediapipe/camera_utils';
 export default {
   data() {
     return {
+      // Game
+      gameStarted: false,
+
+      // Blocks
+      mouse: null,
+      blocks: [],
+
       // Snake
       points: [],
     };
@@ -40,6 +50,7 @@ export default {
         this.canvasCtx.drawImage(results.image, 0, 0, this.outputCanvas.width, this.outputCanvas.height);
 
         if (results.multiHandLandmarks) {
+          this.gameStarted = true;
           for (let landmarks of results.multiHandLandmarks) {
             let snakeHead = landmarks[8];
             this.drawCircle(this.outputCanvas, this.canvasCtx, snakeHead, 8);
@@ -60,12 +71,50 @@ export default {
         }
         else
         {
+          this.gameStarted = false;
           this.points = [];
         }
       });
 
+      this.blocks.forEach(block => {
+        this.drawRectangle(this.canvasCtx, block.x, block.y, 10, 10, "red");
+      });
+
+      if (this.gameStarted == false && this.mouse)
+        this.drawRectangle(this.canvasCtx, this.mouse.x, this.mouse.y, 10, 10, "blue");
+
       this.drawFps();
       this.canvasCtx.restore();
+    },
+    updateBlocks: function (res, e) {
+      if (this.gameStarted)
+        return;
+
+      // Round to nearest 10
+      // Since, positions are arranged for each 10px
+      var x = e.clientX - this.outputCanvas.offsetLeft;
+      x = Math.ceil(x / 10) * 10 - 10;
+
+      var y = e.clientY - this.outputCanvas.offsetTop;
+      y = Math.ceil(y / 10) * 10 - 30;
+
+      if (res == 'down')
+      {
+        var foundBlock = this.blocks.find(element => element.x == x && element.y == y)
+        if (e.button == 0) {
+          // Do not place blocks on top of each other
+          if (!foundBlock)
+            this.blocks.push({ x: x, y: y });
+        }
+        else if (e.button == 1) {
+          if (foundBlock)
+            this.blocks.splice(this.blocks.indexOf(foundBlock), 1);
+        }
+      }
+      else if (res == 'hover')
+      {
+        this.mouse = {x: x, y: y};
+      }
     },
     updateView: function()
     {
