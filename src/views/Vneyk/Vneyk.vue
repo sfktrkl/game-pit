@@ -43,7 +43,7 @@ export default {
       // Snake
       snake: [],
       points: [],
-      snakeWidth: 12,
+      snakeRadius: 12,
       currentLength: 0,
       allowedLength: 150,
     };
@@ -106,11 +106,22 @@ export default {
       this.currentLength = 0;
       this.allowedLength = 150;
     },
-    checkCoordinate: function(coordinate, test, width, height)
+    checkCoordinate: function(coordinate, snake, width, height)
     {
-      if (Math.abs(coordinate.x - test.x) < width && Math.abs(coordinate.y - test.y) < height)
-        return true;
-      return false;
+      let coordinateMinX = coordinate.x;
+      let coordinateMaxX = coordinateMinX + width;
+      let coordinateMinY = coordinate.y;
+      let coordinateMaxY = coordinateMinY + height;
+
+      let snakeMinX = snake.x - this.snakeRadius;
+      let snakeMaxX = snake.x + this.snakeRadius;
+      let snakeMinY = snake.y - this.snakeRadius;
+      let snakeMaxY = snake.y + this.snakeRadius;
+
+      return !(snakeMinX > coordinateMaxX
+          || snakeMaxX < coordinateMinX
+          || snakeMinY > coordinateMaxY
+          || snakeMaxY < coordinateMinY);
     },
     randomFood: function (min, max) {
       return Math.round((Math.random() * (max-min) + min) / 10) * 10;

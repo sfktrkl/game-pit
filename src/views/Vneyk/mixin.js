@@ -37,7 +37,7 @@ export default {
     },
     drawSnake: function(snakeHead)
     {
-      this.drawCircle(this.outputCanvas, this.canvasCtx, snakeHead, this.snakeWidth);
+      this.drawCircle(this.outputCanvas, this.canvasCtx, snakeHead, this.snakeRadius);
 
       let currentHead = { 
         x: snakeHead.x * this.outputCanvas.width,
@@ -53,7 +53,7 @@ export default {
       {
         this.updateSnakeLength();
         for (let i = 1; i < this.points.length; i++)
-          this.drawLine(this.canvasCtx, this.points[i], this.points[i - 1], this.snakeWidth * 0.8, "green")
+          this.drawLine(this.canvasCtx, this.points[i], this.points[i - 1], this.snakeRadius * 0.8, "green")
       }
 
       return mirrored;
