@@ -138,6 +138,20 @@ export default {
         let lips = [62, 96, 89, 179, 86, 15, 316, 403, 319, 325, 292, 272, 271, 268, 12, 38, 41, 42, 62];
         this.drawFill(outputCanvas, canvasCtx, landmarks, lips, color);
     },
+    drawCircle: function(outputCanvas, canvasCtx, landmark, radius, lineWidth = 5, color = "green",)
+    {
+      let x = 0, y = 0;
+      x = landmark.x * outputCanvas.width;
+      y = landmark.y * outputCanvas.height;
+      x = parseInt(x), y = parseInt(y);
+      
+      canvasCtx.fillStyle = color;
+      canvasCtx.lineWidth = lineWidth;
+      canvasCtx.beginPath();
+      canvasCtx.arc(x, y, radius, 0, 2 * Math.PI, false);
+      canvasCtx.fill();
+      canvasCtx.stroke();
+    },
     calculateAngle: function(outputCanvas, landmarks, a, b, c)
     {
       let pt1 = { x: landmarks[a].x * outputCanvas.width, y: landmarks[a].y * outputCanvas.height };

@@ -22,7 +22,8 @@ import CameraUtils from '@mediapipe/camera_utils';
 export default {
   data() {
     return {
-
+      // Snake
+      points: [],
     };
   },
   mixins: [
@@ -37,7 +38,30 @@ export default {
 
       this.drawMirrored(() => {
         this.canvasCtx.drawImage(results.image, 0, 0, this.outputCanvas.width, this.outputCanvas.height);
-        this.drawHand(results);
+
+        if (results.multiHandLandmarks) {
+          for (let landmarks of results.multiHandLandmarks) {
+            let snakeHead = landmarks[8];
+            this.drawCircle(this.outputCanvas, this.canvasCtx, snakeHead, 8);
+
+            let currentHead = { 
+              x: snakeHead.x * this.outputCanvas.width,
+              y: snakeHead.y * this.outputCanvas.height
+            };
+
+            this.points.push(currentHead);
+            if (this.points.length > 2)
+            {
+              for (let i = 1; i < this.points.length; i++)
+                this.drawLine(this.canvasCtx, this.points[i], this.points[i - 1], 6, "green")
+            }
+            this.previousHead = currentHead;
+          }
+        }
+        else
+        {
+          this.points = [];
+        }
       });
 
       this.drawFps();
