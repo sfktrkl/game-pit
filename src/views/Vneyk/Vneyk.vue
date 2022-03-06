@@ -94,10 +94,6 @@ export default {
             }
           }
         }
-        else
-        {
-          this.resetGame();
-        }
       });
 
       this.drawBlocks();
