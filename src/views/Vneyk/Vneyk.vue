@@ -142,12 +142,12 @@ export default {
           || snakeMaxY < coordinateMinY);
     },
     randomFood: function (min, max) {
-      return Math.round((Math.random() * (max-min) + min) / 10) * 10;
+      return Math.round((Math.random() * (max-min) + min) / this.foodSize) * this.foodSize;
     },
     checkFood: function (x, y) {
       // Do not create foods on snake or blocks
       this.snake.forEach(tail => {
-        if (x == tail.x && y == tail.y)
+        if (this.boundingBoxCollision({x: x, y: y}, tail, this.foodSize, this.foodSize))
           return false;
       })
 
