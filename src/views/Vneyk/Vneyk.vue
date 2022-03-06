@@ -34,6 +34,8 @@ export default {
 
       // Snake
       points: [],
+      currentLength: 0,
+      allowedLength: 150,
     };
   },
   mixins: [
@@ -63,6 +65,7 @@ export default {
             this.points.push(currentHead);
             if (this.points.length > 2)
             {
+              this.updateSnakeLength();
               for (let i = 1; i < this.points.length; i++)
                 this.drawLine(this.canvasCtx, this.points[i], this.points[i - 1], 6, "green")
             }
@@ -85,6 +88,32 @@ export default {
 
       this.drawFps();
       this.canvasCtx.restore();
+    },
+    calculateSnakeLength: function()
+    {
+      if (this.points.length > 2)
+      {
+        let length = 0;
+        for (let i = 1; i < this.points.length; i++)
+        {
+          let currentHead = this.points[i];
+          let previousHead = this.points[i - 1];
+          length += Math.hypot(
+            currentHead.x - previousHead.x,
+            currentHead.y - previousHead.y);
+        }
+        return length;
+      }
+      return 0;
+    },
+    updateSnakeLength: function()
+    {
+      this.currentLength = this.calculateSnakeLength();
+      if (this.currentLength > this.allowedLength)
+      {
+        this.points.splice(0, 1);
+        this.updateSnakeLength();
+      }
     },
     updateBlocks: function (res, e) {
       if (this.gameStarted)
