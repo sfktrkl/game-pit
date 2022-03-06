@@ -35,5 +35,44 @@ export default {
       drawFunc();
       this.canvasCtx.restore();
     },
+    drawSnake: function(snakeHead)
+    {
+      this.drawCircle(this.outputCanvas, this.canvasCtx, snakeHead, this.snakeWidth);
+
+      let currentHead = { 
+        x: snakeHead.x * this.outputCanvas.width,
+        y: snakeHead.y * this.outputCanvas.height
+      };
+
+      // Mirror point to find the position of the snake
+      let mirrored = { x: this.outputCanvas.width - currentHead.x, y: currentHead.y };
+      this.snake.push(mirrored);
+
+      this.points.push(currentHead);
+      if (this.points.length > 2)
+      {
+        this.updateSnakeLength();
+        for (let i = 1; i < this.points.length; i++)
+          this.drawLine(this.canvasCtx, this.points[i], this.points[i - 1], this.snakeWidth * 0.8, "green")
+      }
+
+      return mirrored;
+    },
+    drawBlocks: function()
+    {
+      this.blocks.forEach(block => {
+        this.drawRectangle(this.canvasCtx, block.x, block.y, this.blockWidth, this.blockHeight, "red");
+      });
+    },
+    drawFood: function()
+    {
+      if (this.gameStarted && this.food)
+        this.drawRectangle(this.canvasCtx, this.food.x, this.food.y, this.foodWidth, this.foodHeight, "yellow");
+    },
+    drawMouse: function()
+    {
+      if (this.gameStarted == false && this.mouse)
+        this.drawRectangle(this.canvasCtx, this.mouse.x, this.mouse.y, this.blockWidth, this.blockHeight, "blue");
+    }
   }
 }

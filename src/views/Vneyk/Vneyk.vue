@@ -65,35 +65,16 @@ export default {
           this.gameStarted = true;
           this.generateFood()
           for (let landmarks of results.multiHandLandmarks) {
-            let snakeHead = landmarks[8];
-            this.drawCircle(this.outputCanvas, this.canvasCtx, snakeHead, this.snakeWidth);
-
-            let currentHead = { 
-              x: snakeHead.x * this.outputCanvas.width,
-              y: snakeHead.y * this.outputCanvas.height
-            };
-
-            // Mirror point to find the position of the snake
-            let mirrored = { x: this.outputCanvas.width - currentHead.x, y: currentHead.y };
-            this.snake.push(mirrored);
-
-            this.points.push(currentHead);
-            if (this.points.length > 2)
-            {
-              this.updateSnakeLength();
-              for (let i = 1; i < this.points.length; i++)
-                this.drawLine(this.canvasCtx, this.points[i], this.points[i - 1], this.snakeWidth * 0.8, "green")
-            }
-            this.previousHead = currentHead;
+            let snakeHead = this.drawSnake(landmarks[8])
 
             // Reset game when a block is hit
             this.blocks.forEach(block => {
-              if (this.checkCoordinate(block, mirrored, this.blockWidth, this.blockHeight))
+              if (this.checkCoordinate(block, snakeHead, this.blockWidth, this.blockHeight))
                 this.resetGame();
             });
 
             // Check whether food is eaten or not
-            if (this.checkCoordinate(this.food, mirrored, this.foodWidth, this.foodHeight))
+            if (this.checkCoordinate(this.food, snakeHead, this.foodWidth, this.foodHeight))
             {
               this.allowedLength += 50
               this.score += 10;
@@ -108,15 +89,9 @@ export default {
         }
       });
 
-      this.blocks.forEach(block => {
-        this.drawRectangle(this.canvasCtx, block.x, block.y, this.blockWidth, this.blockHeight, "red");
-      });
-
-      if (this.gameStarted && this.food)
-        this.drawRectangle(this.canvasCtx, this.food.x, this.food.y, this.foodWidth, this.foodHeight, "yellow");
-
-      if (this.gameStarted == false && this.mouse)
-        this.drawRectangle(this.canvasCtx, this.mouse.x, this.mouse.y, this.blockWidth, this.blockHeight, "blue");
+      this.drawBlocks();
+      this.drawFood();
+      this.drawMouse();
 
       this.drawFps("black");
       this.drawText(this.canvasCtx, "Score: " + this.score, this.outputCanvas.width - 10, 30, "green", "right", "30px Comic Sans MS");
