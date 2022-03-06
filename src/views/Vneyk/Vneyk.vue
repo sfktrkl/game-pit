@@ -34,11 +34,13 @@ export default {
     {
       this.canvasCtx.save();
       this.canvasCtx.clearRect(0, 0, this.outputCanvas.width, this.outputCanvas.height);
-      this.canvasCtx.drawImage(results.image, 0, 0, this.outputCanvas.width, this.outputCanvas.height);
+
+      this.drawMirrored(() => {
+        this.canvasCtx.drawImage(results.image, 0, 0, this.outputCanvas.width, this.outputCanvas.height);
+        this.drawHand(results);
+      });
 
       this.drawFps();
-      this.drawHand(results);
-
       this.canvasCtx.restore();
     },
     updateView: function()
@@ -56,9 +58,11 @@ export default {
       this.solution.onResults(this.onResults);
 
       this.inputVideo = document.createElement("video");
+      this.inputVideo.msHorizontalMirror = false;
       this.inputVideo.addEventListener("loadedmetadata", () => {
         this.canvasHeight = this.inputVideo.videoHeight;
         this.canvasWidth = this.inputVideo.videoWidth;
+        this.msHorizontalMirror = false;
       });
 
       this.camera = new CameraUtils.Camera(this.inputVideo, { onFrame: this.cameraOnFrame });
