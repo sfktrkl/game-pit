@@ -67,14 +67,27 @@ export default {
           for (let landmarks of results.multiHandLandmarks) {
             let snakeHead = this.drawSnake(landmarks[8])
 
+            // Reset game when snake hits itself
+            // Do not check collision before snake fully grows,
+            // otherwise it will cause problem when game first started.
+            if (this.currentLength > 100)
+            {
+              // Since points are too close, do not count first couple tails
+              for (let i = 0; i < this.snake.length * 0.5; i++)
+              {
+                if (this.circleCollision(this.snake[i], snakeHead, this.snakeRadius * 0.8))
+                  this.resetGame();
+              }
+            }
+
             // Reset game when a block is hit
             this.blocks.forEach(block => {
-              if (this.checkCoordinate(block, snakeHead, this.blockWidth, this.blockHeight))
+              if (this.boundingBoxCollision(block, snakeHead, this.blockWidth, this.blockHeight))
                 this.resetGame();
             });
 
             // Check whether food is eaten or not
-            if (this.checkCoordinate(this.food, snakeHead, this.foodWidth, this.foodHeight))
+            if (this.boundingBoxCollision(this.food, snakeHead, this.foodWidth, this.foodHeight))
             {
               this.allowedLength += 50
               this.score += 10;
@@ -106,7 +119,14 @@ export default {
       this.currentLength = 0;
       this.allowedLength = 150;
     },
-    checkCoordinate: function(coordinate, snake, width, height)
+    circleCollision: function(coordinate, snake, radius)
+    {
+      var dx = (coordinate.x + radius) - (snake.x + this.snakeRadius);
+      var dy = (coordinate.y + radius) - (snake.y + this.snakeRadius);
+      var distance = Math.sqrt(dx * dx + dy * dy);
+      return (distance < radius + this.snakeRadius);
+    },
+    boundingBoxCollision: function(coordinate, snake, width, height)
     {
       let coordinateMinX = coordinate.x;
       let coordinateMaxX = coordinateMinX + width;
@@ -174,6 +194,7 @@ export default {
       if (this.currentLength > this.allowedLength)
       {
         this.points.splice(0, 1);
+        this.snake.splice(0, 1);
         this.updateSnakeLength();
       }
     },
