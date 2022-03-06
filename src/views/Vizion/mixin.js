@@ -23,13 +23,13 @@ export default {
     filePath: { type: String }
   },
   methods: {
-    drawFps: function() {
+    drawFps: function(color = "lightgreen") {
       // Show fps
       this.currentTime = new Date();
       let fps = parseInt(1000 / (this.currentTime - this.previousTime));
       this.previousTime = this.currentTime;
       this.canvasCtx.font = "20px Comic Sans MS";
-      this.canvasCtx.fillStyle = "lightgreen";
+      this.canvasCtx.fillStyle = color;
       this.canvasCtx.fillText("FPS: " + fps, 10, 20);
 
       // Hide loader when canvas rendered for the first time

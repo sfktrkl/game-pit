@@ -98,7 +98,7 @@ export default {
       if (this.gameStarted == false && this.mouse)
         this.drawRectangle(this.canvasCtx, this.mouse.x, this.mouse.y, this.blockWidth, this.blockHeight, "blue");
 
-      this.drawFps();
+      this.drawFps("black");
       this.canvasCtx.restore();
     },
     randomFood: function (min, max) {
