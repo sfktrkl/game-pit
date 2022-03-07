@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       // Options
-      modelComplexity: 1,
+      modelComplexity: 0,
       smoothLandmarks: true,
       minDetectionConfidence: 0.75,
       minTrackingConfidence: 0.75
@@ -72,10 +72,10 @@ export default {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.3.1620694839/${file}`;
       }});
       this.solution.setOptions({
-        modelComplexity: this.modelComplexity,
+        modelComplexity: parseFloat(this.modelComplexity),
         smoothLandmarks: this.smoothLandmarks,
-        minDetectionConfidence: this.minDetectionConfidence,
-        minTrackingConfidence: this.minTrackingConfidence
+        minDetectionConfidence: parseFloat(this.minDetectionConfidence),
+        minTrackingConfidence: parseFloat(this.minTrackingConfidence)
       });
       this.solution.onResults(this.onResults);
     }

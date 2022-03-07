@@ -63,9 +63,9 @@ export default {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1626476802/${file}`;
       }});
       this.solution.setOptions({
-        maxNumFaces: this.maxNumFaces,
-        minDetectionConfidence: this.minDetectionConfidence,
-        minTrackingConfidence: this.minTrackingConfidence
+        maxNumFaces: parseFloat(this.maxNumFaces),
+        minDetectionConfidence: parseFloat(this.minDetectionConfidence),
+        minTrackingConfidence: parseFloat(this.minTrackingConfidence)
       });
       this.solution.onResults(this.onResults);
     }

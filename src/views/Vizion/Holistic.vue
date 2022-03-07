@@ -5,7 +5,7 @@
     <div id="options">
       <div class="option">
         <label class="optionLabel" for="modelComplexity">Model complexitiy</label>
-        <input id="modelComplexity" type="number" min="1" max="2" step="1" v-model="modelComplexity" @change="update" required>
+        <input id="modelComplexity" type="number" min="0" max="2" step="1" v-model="modelComplexity" @change="update" required>
       </div>
 
       <div class="option">
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       // Options
-      modelComplexity: 1,
+      modelComplexity: 0,
       smoothLandmarks: true,
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5
@@ -85,10 +85,10 @@ export default {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.3.1620694839/${file}`;
       }});
       this.solution.setOptions({
-        modelComplexity: this.modelComplexity,
+        modelComplexity: parseFloat(this.modelComplexity),
         smoothLandmarks: this.smoothLandmarks,
-        minDetectionConfidence: this.minDetectionConfidence,
-        minTrackingConfidence: this.minTrackingConfidence
+        minDetectionConfidence: parseFloat(this.minDetectionConfidence),
+        minTrackingConfidence: parseFloat(this.minTrackingConfidence)
       });
       this.solution.onResults(this.onResults);
     }

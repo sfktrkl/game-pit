@@ -4,11 +4,6 @@
 
     <div id="options">
       <div class="option">
-        <label class="optionLabel" for="modelSelection">Model selection</label>
-        <input id="modelSelection" type="number" min="0" max="1" step="1" v-model="modelSelection" @change="update" required>
-      </div>
-
-      <div class="option">
         <label class="optionLabel" for="minDetection">Minimum detection confidence</label>
         <input id="minDetection" type="number" min="0" max="1" step="0.1" v-model="minDetectionConfidence" @change="update" required>
       </div>
@@ -89,8 +84,7 @@ export default {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.3/${file}`;
       }});
       this.solution.setOptions({
-        modelSelection: this.modelSelection,
-        minDetectionConfidence: this.minDetectionConfidence
+        minDetectionConfidence: parseFloat(this.minDetectionConfidence)
       });
       this.solution.onResults(this.onResults);
     }
