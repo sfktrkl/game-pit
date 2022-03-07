@@ -142,18 +142,19 @@ export default {
       return Math.round((Math.random() * (max-min) + min) / this.foodSize) * this.foodSize;
     },
     checkFood: function (x, y) {
+      let valid = true;
       // Do not create foods on snake or blocks
       this.snake.forEach(tail => {
         if (this.boundingBoxCollision({x: x, y: y}, tail, this.foodSize, this.foodSize))
-          return false;
+          valid = false;
       })
 
       this.blocks.forEach(block => {
         if (x == block.x && y == block.y)
-          return false;
+          valid = false;
       })
 
-      return true;
+      return valid;
     },
     generateFood: function () {
       if (!this.food)
