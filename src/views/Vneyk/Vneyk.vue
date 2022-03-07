@@ -28,7 +28,8 @@ export default {
       // Game
       gameStarted: false,
       score: 0,
-      time: null,
+      timePrevious: null,
+      timePassed: 0,
 
       // Blocks
       mouse: null,
@@ -63,6 +64,8 @@ export default {
         if (results.multiHandLandmarks) {
           this.gameStarted = true;
           this.generateFood()
+          this.timePrevious = null;
+          this.timePassed = null;
           for (let landmarks of results.multiHandLandmarks) {
             let snakeHead = this.drawSnake(landmarks[8])
 
@@ -99,10 +102,14 @@ export default {
         {
           if (this.gameStarted)
           {
-            if (!this.time)
-              this.time = new Date();
-            if (this.time && (new Date() - this.time) / 1000 > 3)
-              this.resetGame();
+            if (!this.timePrevious)
+              this.timePrevious = new Date();
+            else
+            {
+              this.timePassed = (new Date() - this.timePrevious) / 1000;
+              if (this.timePassed > 3)
+                this.resetGame();
+            }
           }
         }
       });
@@ -112,6 +119,8 @@ export default {
       this.drawMouse();
 
       this.drawFps("black");
+      if (this.timePassed)
+        this.drawText(this.canvasCtx, this.timePassed, this.outputCanvas.width - 10, this.outputCanvas.height - 10, "red", "right", "30px Comic Sans MS");
       this.drawText(this.canvasCtx, "Score: " + this.score, this.outputCanvas.width - 10, 30, "green", "right", "30px Comic Sans MS");
       this.canvasCtx.restore();
     },
@@ -119,7 +128,8 @@ export default {
     {
       this.gameStarted = false;
       this.score = 0;
-      this.time = null;
+      this.timePrevious = null;
+      this.timePassed = null;
       this.food = null;
       this.snake = [],
       this.points = [];
