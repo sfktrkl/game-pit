@@ -28,6 +28,7 @@ export default {
       // Game
       gameStarted: false,
       score: 0,
+      time: null,
 
       // Blocks
       mouse: null,
@@ -94,6 +95,16 @@ export default {
             }
           }
         }
+        else
+        {
+          if (this.gameStarted)
+          {
+            if (!this.time)
+              this.time = new Date();
+            if (this.time && (new Date() - this.time) / 1000 > 3)
+              this.resetGame();
+          }
+        }
       });
 
       this.drawBlocks();
@@ -108,6 +119,7 @@ export default {
     {
       this.gameStarted = false;
       this.score = 0;
+      this.time = null;
       this.food = null;
       this.snake = [],
       this.points = [];
