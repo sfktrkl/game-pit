@@ -137,6 +137,11 @@ const routes = [
         ]
     },
     {
+        path: '/Zombiez',
+        name: 'Zombiez',
+        component: () => import('../views/Zombiez/Zombiez.vue')
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'Not Found',
         component: () => import("../views/NotFound.vue")

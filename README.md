@@ -85,4 +85,10 @@ docker build -t sfktkl/game-pit .
 
 # Docker run
 docker run -p 8000:80 sfktrkl/game-pit
+
+# wasm-pack-plugin
+npm i @wasm-tool/wasm-pack-plugin
+
+# text-encoding
+npm i text-encoding
 ```
