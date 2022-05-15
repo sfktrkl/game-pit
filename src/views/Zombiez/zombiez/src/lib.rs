@@ -1,11 +1,7 @@
 use wasm_bindgen::prelude::*;
+mod zombie_apocalypse;
 
 #[wasm_bindgen]
-extern "C" {
-    fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-pub fn greet(name: &str) {
-    alert(&format!("Hello, {}!", name));
+pub fn get(input: &str) -> String {
+    zombie_apocalypse::solve(input)
 }

@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     async get() {
-      rust.then(r => r.greet("game-pit"));
+        rust.then(r => this.output = r.get(this.input))
     }
   },
 };
