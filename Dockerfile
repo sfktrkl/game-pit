@@ -1,5 +1,17 @@
 # Build
 FROM node:14.17.5-alpine as build
+WORKDIR /root
+
+# essential packages
+RUN apk add --update alpine-sdk
+
+# rustup
+RUN curl https://sh.rustup.rs -sSf |  sh -s -- --default-toolchain 1.60.0 -y
+ENV PATH=/root/.cargo/bin:$PATH
+
+# wasm-pack
+RUN curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
 WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 COPY package.json /usr/src/app/package.json
