@@ -15,7 +15,7 @@
 </template>
 
 <script>
-const rust = import("./zombiez/pkg")
+import * as rust from "./zombiez/pkg";
 
 export default {
   data() {
@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     async get() {
-        rust.then(r => this.output = r.get(this.input))
+        this.output = rust.get(this.input);
     }
   },
 };
