@@ -69,7 +69,11 @@ fn create_organism(organism: &str, organisms: &mut HashMap<String, Organism>) {
 fn find_organisms(input: &str, organisms: &mut HashMap<String, Organism>) {
     let lines = input.split("\n");
     for line in lines {
-        let words = line.split(",");
+        if line.is_empty() {
+            continue;
+        }
+
+        let words = line.trim().split(",");
         let mut vec = words.collect::<Vec<&str>>();
 
         let predator = String::from(vec[0]);
