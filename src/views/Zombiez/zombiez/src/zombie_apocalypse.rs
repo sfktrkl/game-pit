@@ -7,9 +7,10 @@ struct Organism {
 }
 
 impl Organism {
-    fn get_predators_and_prey(&mut self, solution: &mut String) {
+    fn print_eats(&mut self, solution: &mut String) {
         if self.eats.len() > 0 {
             // Predator eats ...
+            solution.push_str("  ");
             solution.push_str(&self.name);
             solution.push_str(" eats ");
 
@@ -34,28 +35,29 @@ impl Organism {
 
 fn get_predators_and_prey(
     solution: &mut String,
-    organisms: &mut HashMap<String, Organism>
+    organisms: &mut HashMap<String, Organism>,
+    order: &Vec<String>,
 ) {
     solution.push_str("Predators and Prey:\n");
-
-    // Solution looks like in an alphabetical order.
-    // Maybe use an ordered map instead,
-    let mut order = organisms.keys().cloned().collect::<Vec<String>>();
-    order.sort_unstable();
-
     for key in order {
-        if let Some(predator) = organisms.get_mut(&key) {
-            predator.get_predators_and_prey(solution);
+        if let Some(predator) = organisms.get_mut(key) {
+            predator.print_eats(solution);
         }
     }
+    solution.push_str("\n");
 }
 
 pub fn solve(input: &str) -> String {
     let mut organisms: HashMap<String, Organism> = HashMap::new();
     find_organisms(input, &mut organisms);
 
+    // Solution looks like in an alphabetical order.
+    // Maybe use an ordered map instead,
+    let mut order = organisms.keys().cloned().collect::<Vec<String>>();
+    order.sort_unstable();
+
     let mut solution = String::new();
-    get_predators_and_prey(&mut solution, &mut organisms);
+    get_predators_and_prey(&mut solution, &mut organisms, &order);
     solution
 }
 
