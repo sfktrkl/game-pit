@@ -20,7 +20,7 @@ import * as rust from "./zombiez/pkg";
 export default {
   data() {
     return {
-      input: "Lion,Zebra\nZebra,Grass",
+      input: "Grasshopper,Terrestrial plants\nHarvest mouse,Grasshopper,Terrestrial plants\nHawk,Harvest mouse,Rat,Shrew,Vole\nHeron,Shrimp,Smelt\nMallard,Grasshopper,Terrestrial plants,Shrimp\nOwl,Rat,Sparrow,Mallard,Sandpiper\nRat,Grasshopper,Terrestrial plants,Sparrow\nSandpiper,Shrimp\nShrew,Grasshopper\nShrimp,Aquatic plants\nSmelt,Aquatic plants,Shrimp\nSparrow,Grasshopper,Terrestrial plants\nVole,Terrestrial plants,Grasshopper\n",
       output: "",
     };
   },

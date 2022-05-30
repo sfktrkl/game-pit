@@ -1,9 +1,11 @@
 use std::collections::HashMap;
+use std::collections::HashSet;
 
 #[derive(Debug)]
 struct Organism {
     name: String,
     eats: Vec<String>,
+    level: i32,
 }
 
 impl Organism {
@@ -31,17 +33,31 @@ impl Organism {
             solution.push_str("\n");
         }
     }
+
+    fn print_level(&mut self, solution: &mut String) {
+        solution.push_str("  ");
+        solution.push_str(&self.name);
+        solution.push_str(": ");
+        solution.push_str(&self.level.to_string());
+        solution.push_str("\n");
+    }
 }
 
-fn get_predators_and_prey(
+fn arrange_solution(
+    title: &str,
     solution: &mut String,
     organisms: &mut HashMap<String, Organism>,
     order: &Vec<String>,
 ) {
-    solution.push_str("Predators and Prey:\n");
+    solution.push_str(title);
+    solution.push_str(":\n");
     for key in order {
         if let Some(predator) = organisms.get_mut(key) {
-            predator.print_eats(solution);
+            if title.eq("Predators and Prey") {
+                predator.print_eats(solution);
+            } else if title.eq("Heights") {
+                predator.print_level(solution);
+            }
         }
     }
     solution.push_str("\n");
@@ -56,8 +72,12 @@ pub fn solve(input: &str) -> String {
     let mut order = organisms.keys().cloned().collect::<Vec<String>>();
     order.sort_unstable();
 
+    let mut food_chain: HashMap<i32, HashSet<String>> = HashMap::new();
+    create_food_chain(&mut organisms, &mut food_chain);
+
     let mut solution = String::new();
-    get_predators_and_prey(&mut solution, &mut organisms, &order);
+    arrange_solution("Predators and Prey", &mut solution, &mut organisms, &order);
+    arrange_solution("Heights", &mut solution, &mut organisms, &order);
     solution
 }
 
@@ -65,6 +85,7 @@ fn create_organism(organism: &str, organisms: &mut HashMap<String, Organism>) {
     organisms.entry(organism.to_string()).or_insert(Organism {
         name: organism.to_string(),
         eats: Vec::new(),
+        level: 0,
     });
 }
 
@@ -86,6 +107,62 @@ fn find_organisms(input: &str, organisms: &mut HashMap<String, Organism>) {
             create_organism(&organism, organisms);
             if let Some(predator) = organisms.get_mut(&predator) {
                 predator.eats.push(organism);
+            }
+        }
+    }
+}
+
+fn create_food_chain(
+    organisms: &mut HashMap<String, Organism>,
+    food_chain: &mut HashMap<i32, HashSet<String>>,
+) {
+    let mut end = true;
+    let level = food_chain.len() as i32;
+    let mut set = HashSet::<String>::new();
+    for (name, organism) in organisms.iter() {
+        if level == 0 {
+            if organism.eats.len() == 0 {
+                // If organism doesn't eat anything, add it as a
+                // producer to the first level in the food_chain.
+                set.insert(name.to_string());
+                end = false;
+            }
+        } else {
+            if let Some(eaten) = food_chain.get_mut(&(level - 1)) {
+                for eat in eaten.iter() {
+                    if organism.eats.contains(&eat) {
+                        // Store organism to add to the current level.
+                        set.insert(name.to_string());
+                        end = false;
+                    }
+                }
+            }
+        }
+    }
+    if set.len() > 0 {
+        // If any organism which needs to be added to this level
+        // in the food_chain also exists in the previous level,
+        // remove it from the previous level. promote.
+        if let Some(eaten) = food_chain.get_mut(&(level - 1)) {
+            for organism in set.iter() {
+                eaten.remove(organism);
+            }
+        }
+        // Add organisms to the food_chain.
+        food_chain.insert(level, set);
+    }
+
+    // Recurse further to the next level.
+    if !end {
+        create_food_chain(organisms, food_chain);
+    }
+    // Store information in the organisms.
+    else {
+        for (level, consumers) in food_chain {
+            for consumer in consumers.iter() {
+                if let Some(organism) = organisms.get_mut(consumer) {
+                    organism.level = *level;
+                }
             }
         }
     }
