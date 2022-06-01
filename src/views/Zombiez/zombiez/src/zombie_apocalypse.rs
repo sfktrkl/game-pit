@@ -5,6 +5,7 @@ use std::collections::HashSet;
 struct Organism {
     name: String,
     eats: Vec<String>,
+    eaten: Vec<String>,
     level: i32,
 }
 
@@ -19,17 +20,7 @@ impl Organism {
             // Solution should be in an alphabetical order.
             // Sort it just in place.
             self.eats.sort_unstable();
-            for (i, organism) in self.eats.iter().enumerate() {
-                // ... eats something
-                solution.push_str(&organism);
-                match self.eats.len() {
-                    // ... something and something
-                    x if x == i + 2 => solution.push_str(" and "),
-                    // ... eats something, something ...
-                    x if x > i + 1 => solution.push_str(", "),
-                    _ => (),
-                }
-            }
+            solution.push_str(&vec_to_string(&self.eats));
             solution.push_str("\n");
         }
     }
@@ -43,21 +34,52 @@ impl Organism {
     }
 }
 
+fn vec_to_string(vec: &Vec<String>) -> String {
+    let mut text = String::new();
+    for (i, item) in vec.iter().enumerate() {
+        text.push_str(&item);
+        match vec.len() {
+            x if x == i + 2 => text.push_str(" and "),
+            x if x > i + 1 => text.push_str(", "),
+            _ => (),
+        }
+    }
+    text
+}
+
 fn arrange_solution(
-    title: &str,
     solution: &mut String,
     organisms: &mut HashMap<String, Organism>,
+    trophic_levels: &Vec<Vec<String>>,
     order: &Vec<String>,
 ) {
-    solution.push_str(title);
+    solution.push_str("Predators and Prey");
     solution.push_str(":\n");
     for key in order {
         if let Some(predator) = organisms.get_mut(key) {
-            if title.eq("Predators and Prey") {
-                predator.print_eats(solution);
-            } else if title.eq("Heights") {
-                predator.print_level(solution);
-            }
+            predator.print_eats(solution);
+        }
+    }
+    solution.push_str("\n");
+
+    let trophic_level_titles = vec![
+        "Apex Predators: ",
+        "Producers: ",
+        "Most Flexible Eaters: ",
+        "Tastiest: ",
+    ];
+    for (level, vec) in trophic_levels.iter().enumerate() {
+        solution.push_str(trophic_level_titles[level]);
+        solution.push_str(&vec_to_string(vec));
+        solution.push_str("\n");
+    }
+    solution.push_str("\n");
+
+    solution.push_str("Heights");
+    solution.push_str(":\n");
+    for key in order {
+        if let Some(predator) = organisms.get_mut(key) {
+            predator.print_level(solution);
         }
     }
     solution.push_str("\n");
@@ -75,9 +97,11 @@ pub fn solve(input: &str) -> String {
     let mut food_chain: HashMap<i32, HashSet<String>> = HashMap::new();
     create_food_chain(&mut organisms, &mut food_chain);
 
+    let mut trophic_levels: Vec<Vec<String>> = Vec::new();
+    identify_trophic_levels(&mut organisms, &mut trophic_levels);
+
     let mut solution = String::new();
-    arrange_solution("Predators and Prey", &mut solution, &mut organisms, &order);
-    arrange_solution("Heights", &mut solution, &mut organisms, &order);
+    arrange_solution(&mut solution, &mut organisms, &trophic_levels, &order);
     solution
 }
 
@@ -85,6 +109,7 @@ fn create_organism(organism: &str, organisms: &mut HashMap<String, Organism>) {
     organisms.entry(organism.to_string()).or_insert(Organism {
         name: organism.to_string(),
         eats: Vec::new(),
+        eaten: Vec::new(),
         level: 0,
     });
 }
@@ -105,6 +130,9 @@ fn find_organisms(input: &str, organisms: &mut HashMap<String, Organism>) {
         for organism in &mut vec[1..] {
             let organism = String::from(organism.to_string());
             create_organism(&organism, organisms);
+            if let Some(organism) = organisms.get_mut(&organism) {
+                organism.eaten.push(predator.clone());
+            }
             if let Some(predator) = organisms.get_mut(&predator) {
                 predator.eats.push(organism);
             }
@@ -165,5 +193,43 @@ fn create_food_chain(
                 }
             }
         }
+    }
+}
+
+fn identify_trophic_levels(
+    organisms: &mut HashMap<String, Organism>,
+    trophic_levels: &mut Vec<Vec<String>>,
+) {
+    trophic_levels.resize(4, Vec::<String>::new());
+    let mut eaters_max = 0;
+    let mut tastiest_max = 0;
+    for (name, organism) in organisms.iter() {
+        // Apex predators, have no predators.
+        if organism.eaten.len() == 0 {
+            trophic_levels[0].push(name.to_string());
+        }
+        // Producers, make their own food.
+        if organism.eats.len() == 0 {
+            trophic_levels[1].push(name.to_string());
+        }
+        // Most flexible eaters.
+        if organism.eats.len() >= eaters_max {
+            if organism.eats.len() > eaters_max {
+                trophic_levels[2].clear();
+            }
+            trophic_levels[2].push(name.to_string());
+            eaters_max = organism.eats.len();
+        }
+        // Tastiest
+        if organism.eaten.len() >= tastiest_max {
+            if organism.eaten.len() > tastiest_max {
+                trophic_levels[3].clear();
+            }
+            trophic_levels[3].push(name.to_string());
+            tastiest_max = organism.eaten.len();
+        }
+    }
+    for level in trophic_levels {
+        level.sort_unstable();
     }
 }
