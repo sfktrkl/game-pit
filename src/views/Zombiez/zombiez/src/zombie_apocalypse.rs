@@ -1,5 +1,14 @@
+use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::collections::HashSet;
+
+#[derive(Debug, Eq, Hash, PartialEq, Ord, PartialOrd)]
+enum Classification {
+    Herbivore,
+    Omnivore,
+    Carnivore,
+    None,
+}
 
 #[derive(Debug)]
 struct Organism {
@@ -7,6 +16,7 @@ struct Organism {
     eats: Vec<String>,
     eaten: Vec<String>,
     level: i32,
+    classification: Classification,
 }
 
 impl Organism {
@@ -40,6 +50,9 @@ fn vec_to_string(vec: &Vec<String>) -> String {
             _ => (),
         }
     }
+    if vec.len() == 0 {
+        text.push_str("(None)");
+    }
     text
 }
 
@@ -47,6 +60,7 @@ fn arrange_solution(
     solution: &mut String,
     organisms: &HashMap<String, Organism>,
     trophic_levels: &Vec<Vec<String>>,
+    classifications: &HashMap<Classification, Vec<String>>,
 ) {
     // Solution looks like in an alphabetical order.
     // Maybe use an ordered map for organims.
@@ -83,6 +97,20 @@ fn arrange_solution(
         }
     }
     solution.push_str("\n");
+
+    solution.push_str("For an A+");
+    solution.push_str(":\n");
+    let classification_titles = BTreeMap::from([
+        (Classification::Herbivore, "Herbivores: "),
+        (Classification::Omnivore, "Omnivores: "),
+        (Classification::Carnivore, "Carnivores: "),
+    ]);
+    for (classification, title) in classification_titles.iter() {
+        solution.push_str("  ");
+        solution.push_str(title);
+        solution.push_str(&vec_to_string(&classifications[classification]));
+        solution.push_str("\n");
+    }
 }
 
 pub fn solve(input: &str) -> String {
@@ -92,11 +120,19 @@ pub fn solve(input: &str) -> String {
     let mut food_chain: HashMap<i32, HashSet<String>> = HashMap::new();
     create_food_chain(&mut organisms, &mut food_chain);
 
+    let mut classifications: HashMap<Classification, Vec<String>> = HashMap::new();
+    classify_organisms(&mut organisms, &mut classifications, &food_chain);
+
     let mut trophic_levels: Vec<Vec<String>> = Vec::new();
     identify_trophic_levels(&mut organisms, &mut trophic_levels);
 
     let mut solution = String::new();
-    arrange_solution(&mut solution, &mut organisms, &trophic_levels);
+    arrange_solution(
+        &mut solution,
+        &mut organisms,
+        &trophic_levels,
+        &classifications,
+    );
     solution
 }
 
@@ -106,6 +142,7 @@ fn create_organism(organism: &str, organisms: &mut HashMap<String, Organism>) {
         eats: Vec::new(),
         eaten: Vec::new(),
         level: 0,
+        classification: Classification::None,
     });
 }
 
@@ -190,6 +227,54 @@ fn create_food_chain(
                 }
             }
         }
+    }
+}
+
+fn classify_organisms(
+    organisms: &mut HashMap<String, Organism>,
+    classifications: &mut HashMap<Classification, Vec<String>>,
+    food_chain: &HashMap<i32, HashSet<String>>,
+) {
+    classifications
+        .entry(Classification::Omnivore)
+        .or_insert(Vec::new());
+    classifications
+        .entry(Classification::Carnivore)
+        .or_insert(Vec::new());
+    classifications
+        .entry(Classification::Herbivore)
+        .or_insert(Vec::new());
+    classifications
+        .entry(Classification::None)
+        .or_insert(Vec::new());
+
+    for (name, organism) in organisms.iter_mut() {
+        let mut herbivore = false;
+        let mut carnivore = false;
+        for eaten in &organism.eats {
+            if let Some(producers) = food_chain.get(&0) {
+                if producers.contains(eaten) {
+                    herbivore = true;
+                } else {
+                    carnivore = true;
+                }
+            }
+        }
+
+        if carnivore && herbivore {
+            organism.classification = Classification::Omnivore;
+        } else if carnivore {
+            organism.classification = Classification::Carnivore;
+        } else if herbivore {
+            organism.classification = Classification::Herbivore;
+        } else {
+            organism.classification = Classification::None;
+        }
+        let vec = classifications.get_mut(&organism.classification).unwrap();
+        vec.push(name.to_string());
+    }
+    for (_classification, vec) in classifications {
+        vec.sort_unstable();
     }
 }
 
