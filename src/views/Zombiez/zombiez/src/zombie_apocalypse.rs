@@ -10,22 +10,18 @@ struct Organism {
 }
 
 impl Organism {
-    fn print_eats(&mut self, solution: &mut String) {
+    fn print_eats(&self, solution: &mut String) {
         if self.eats.len() > 0 {
             // Predator eats ...
             solution.push_str("  ");
             solution.push_str(&self.name);
             solution.push_str(" eats ");
-
-            // Solution should be in an alphabetical order.
-            // Sort it just in place.
-            self.eats.sort_unstable();
             solution.push_str(&vec_to_string(&self.eats));
             solution.push_str("\n");
         }
     }
 
-    fn print_level(&mut self, solution: &mut String) {
+    fn print_level(&self, solution: &mut String) {
         solution.push_str("  ");
         solution.push_str(&self.name);
         solution.push_str(": ");
@@ -49,14 +45,18 @@ fn vec_to_string(vec: &Vec<String>) -> String {
 
 fn arrange_solution(
     solution: &mut String,
-    organisms: &mut HashMap<String, Organism>,
+    organisms: &HashMap<String, Organism>,
     trophic_levels: &Vec<Vec<String>>,
-    order: &Vec<String>,
 ) {
+    // Solution looks like in an alphabetical order.
+    // Maybe use an ordered map for organims.
+    let mut order = organisms.keys().cloned().collect::<Vec<String>>();
+    order.sort_unstable();
+
     solution.push_str("Predators and Prey");
     solution.push_str(":\n");
-    for key in order {
-        if let Some(predator) = organisms.get_mut(key) {
+    for key in order.iter() {
+        if let Some(predator) = organisms.get(key) {
             predator.print_eats(solution);
         }
     }
@@ -77,8 +77,8 @@ fn arrange_solution(
 
     solution.push_str("Heights");
     solution.push_str(":\n");
-    for key in order {
-        if let Some(predator) = organisms.get_mut(key) {
+    for key in order.iter() {
+        if let Some(predator) = organisms.get(key) {
             predator.print_level(solution);
         }
     }
@@ -89,11 +89,6 @@ pub fn solve(input: &str) -> String {
     let mut organisms: HashMap<String, Organism> = HashMap::new();
     find_organisms(input, &mut organisms);
 
-    // Solution looks like in an alphabetical order.
-    // Maybe use an ordered map instead,
-    let mut order = organisms.keys().cloned().collect::<Vec<String>>();
-    order.sort_unstable();
-
     let mut food_chain: HashMap<i32, HashSet<String>> = HashMap::new();
     create_food_chain(&mut organisms, &mut food_chain);
 
@@ -101,7 +96,7 @@ pub fn solve(input: &str) -> String {
     identify_trophic_levels(&mut organisms, &mut trophic_levels);
 
     let mut solution = String::new();
-    arrange_solution(&mut solution, &mut organisms, &trophic_levels, &order);
+    arrange_solution(&mut solution, &mut organisms, &trophic_levels);
     solution
 }
 
@@ -132,9 +127,11 @@ fn find_organisms(input: &str, organisms: &mut HashMap<String, Organism>) {
             create_organism(&organism, organisms);
             if let Some(organism) = organisms.get_mut(&organism) {
                 organism.eaten.push(predator.clone());
+                organism.eaten.sort_unstable();
             }
             if let Some(predator) = organisms.get_mut(&predator) {
                 predator.eats.push(organism);
+                predator.eats.sort_unstable();
             }
         }
     }
