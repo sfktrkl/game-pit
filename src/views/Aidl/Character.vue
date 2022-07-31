@@ -113,6 +113,7 @@ export default {
 
 <style scoped>
 #character {
+  width: 100%;
   margin: 10px;
   text-align: center;
   font-family: "Arial Black", Gadget, sans-serif;
