@@ -6,15 +6,17 @@
       There are two stages of game which are Placement Stage and Attack Stage.<br>
       <b>Placement Stage:</b> Ships have to be placed to friendly territory (right sea).
       To place the ships use left mouse button and to rotate them before place use middle mouse button.<br>
-      During placement stage, <span style="color: green">Green</span> shows allowable moves,
-      <span style="color: purple">Purple</span> shows placed ships,
-      <span style="color: red">Red</span> shows forbidden moves.<br>
+      During placement stage,
+        Green shows allowable moves,
+        Purple shows placed ships,
+        Red shows forbidden moves.<br>
       <b>Attack Stage:</b> Attack the enemy territory (left sea) using left mouse button.
       Every ship tile which will be hit will count as 10 score.
       First player to reach 200 score will win.<br>
-      During attack stage, <span style="color: green">Green</span> shows empty tiles and allowable moves,
-      <span style="color: purple">Purple</span> shows your ships,
-      <span style="color: red">Red</span> shows hit tiles and forbidden moves
+      During attack stage,
+        Green shows empty tiles and allowable moves,
+        Purple shows your ships,
+        Red shows hit tiles and forbidden moves.
     </div>
     <div id="game_state">{{get_game_state()}}</div>
     <div id="scores">
@@ -557,7 +559,7 @@ export default {
   margin-right: auto;
   display: block;
   width: 1344px;
-  height: 640px;
+  height: 600px;
 }
 #name {
   text-align: center;
@@ -568,7 +570,7 @@ export default {
   font-size: 20px;
 }
 #game_state {
-  color: blue;
+  color: gold;
   text-align: center;
   font-size: 30px;
   padding-top: 10px;
@@ -579,7 +581,7 @@ export default {
   padding-bottom: 10px;
 }
 #player_score {
-  color: green;
+  color: blue;
   display: inline-block;
   margin: 0px 240px;
 }
