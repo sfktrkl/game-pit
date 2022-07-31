@@ -35,10 +35,11 @@ nav {
   line-height: 60px;
   padding: 0 120px;
   font-weight: bold;
+  padding-left: 40px;
 }
 nav ul {
   float: right;
-  margin-right: 120px;
+  margin-right: 40px;
 }
 nav ul li {
   display: inline-block;
@@ -72,20 +73,15 @@ nav ul li a:hover {
 #menucheckbox {
   display: none;
 }
-@media (max-width: 980px){
-  .logo {
-    padding-left: 40px;
-  }
+@media (max-width: 1400px){
   .menubutton {
     display: block;
   }
   nav ul {
     position: fixed;
     z-index: 2;
-    width: 20%;
     right: -100%;
     margin: 0;
-    background: green;
     text-align: center;
     transition: .5s;
   }
