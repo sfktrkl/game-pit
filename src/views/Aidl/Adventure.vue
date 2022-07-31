@@ -83,7 +83,7 @@ export default {
       else if (move.target.value <= 0)
         this.responses.difficulty.push({ color: "red", text: "You can't go to a zero or negative level adventure!"});
       else
-        this.responses.difficulty.push({ color: "green", text: "Adventure difficulty updated as " + this.difficulty + "."});
+        this.responses.difficulty.push({ color: "lime", text: "Adventure difficulty updated as " + this.difficulty + "."});
     },
     update_adventure: function (move) {
       this.responses.adventure.length = 0;
@@ -149,7 +149,7 @@ export default {
 
       this.update_stamina(-5 * this.difficulty);
 
-      return { adventure: true, color: "green", text: "You went to an adventure." };
+      return { adventure: true, color: "lime", text: "You went to an adventure." };
     },
     eat: function () {
       this.update_gold(-5);
@@ -160,7 +160,7 @@ export default {
       var stamina_restored = this.aidl.health[1] * 0.2;
       this.update_stamina(stamina_restored);
 
-      return { eat: true, color: "green", text: "You ate." };
+      return { eat: true, color: "lime", text: "You ate." };
     },
     rest: function () {
       // Based on maximum luck
@@ -170,7 +170,7 @@ export default {
       var stamina_restored = this.aidl.stamina[1] * this.get_random_int(1, this.aidl.luck) / 100;
       this.update_stamina(stamina_restored);
 
-      return { rest: true, color: "green", text: "You rested." };
+      return { rest: true, color: "lime", text: "You rested." };
     },
     get_random_int: function (min, max) {
       return Math.floor(Math.random() * (max - min)) + min; // max excluded
@@ -237,7 +237,7 @@ export default {
   background-color: blueviolet;
 }
 .rest {
-  background-color: green;
+  background-color: lime;
 }
 .button:disabled {
   background-color: gray;

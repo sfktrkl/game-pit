@@ -138,7 +138,7 @@ export default {
 }
 .points {
   margin: 10px;
-  color: green;
+  color: lime;
 }
 #items {
   display: inline-block;
@@ -203,7 +203,7 @@ export default {
   color: orange;
 }
 .green {
-  border: 2px solid green;
-  color: green;
+  border: 2px solid lime;
+  color: lime;
 }
 </style>

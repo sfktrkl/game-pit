@@ -71,7 +71,7 @@ export default {
       {
         if (event.key.toLowerCase() == current_char.toLowerCase())
         {
-          this.output.push({ color: "green", char: current_char });
+          this.output.push({ color: "lime", char: current_char });
           if (this.enable_hints) delete this.hints[current_char];
         }
         else

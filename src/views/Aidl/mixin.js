@@ -30,7 +30,7 @@ export default {
         this.aidl.attribute_point += 5;
         this.aidl.experience[0] -= this.aidl.experience[1];
         this.aidl.experience[1] *= Math.ceil(1.05**this.aidl.level);
-        this.informations.push({ color: "green", text: "Level Up!" });
+        this.informations.push({ color: "lime", text: "Level Up!" });
       }
       this.add_information(experience, "experience");
     },
@@ -39,7 +39,7 @@ export default {
       if (this.aidl.health[0] >= this.aidl.health[1])
       {
         this.aidl.health[0] = this.aidl.health[1];
-        this.informations.push({ color: "green", text: "Maximum health reached."});
+        this.informations.push({ color: "lime", text: "Maximum health reached."});
       }
       else if (this.aidl.health[0] <= 0) {
         this.aidl.health[0] = this.aidl.health[1];
@@ -58,7 +58,7 @@ export default {
       if (this.aidl.stamina[0] >= this.aidl.stamina[1])
       {
         this.aidl.stamina[0] = this.aidl.stamina[1];
-        this.informations.push({ color: "green", text: "Maximum stamina reached." });
+        this.informations.push({ color: "lime", text: "Maximum stamina reached." });
       }
       else
       {

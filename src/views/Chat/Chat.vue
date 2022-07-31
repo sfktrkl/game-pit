@@ -112,7 +112,7 @@ export default {
   margin: 5px 0px;
 }
 #submit input {
-  background-color: green;
+  background-color: blue;
   color: white;
   border: none;
   padding: 16px 32px;
@@ -153,14 +153,14 @@ export default {
 }
 #you {
   text-align: center;
-  color: green;
+  color: lime;
 }
 #yourChat {
   padding: 0px 12px 4px 12px;
   margin: 8px 0px 8px 0px;
   text-align: right;
   border: solid 1px;
-  color: green;
+  color: lime;
 }
 #theirChat {
   padding: 0px 12px 4px 12px;

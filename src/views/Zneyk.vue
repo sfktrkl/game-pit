@@ -292,7 +292,7 @@ export default {
   padding-bottom: 10px;
 }
 .play {
-  background-color: green;
+  background-color: lime;
   color: white;
   border: none;
   padding: 16px 32px;

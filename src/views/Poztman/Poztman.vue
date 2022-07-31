@@ -90,7 +90,7 @@ export default {
 
       raw: false,
 
-      getColor: "green",
+      getColor: "lime",
       postColor: "red",
 
       requests: [
@@ -170,7 +170,7 @@ export default {
           if (typeof(item[1]) === "string")
             item1 = "<span style=\"color: #0d5eff; font-weight: bold\">\"" + item[1] + "\"</span>";
           if (typeof(item[1]) === "number")
-            item1 = "<span style=\"color: green; font-weight: bold\">" + item[1] + "</span>";
+            item1 = "<span style=\"color: lime; font-weight: bold\">" + item[1] + "</span>";
           text += item0 + item1;
         }
       });
@@ -450,7 +450,7 @@ button:hover {
 }
 .paramFile + .paramFileLabel {
   display: inline-block;
-  background: green;
+  background: lime;
   color: white;
   border: none;
   padding: 18px 18px;
@@ -480,7 +480,7 @@ button:hover {
   margin-bottom: 12px;
 }
 .responseState.active {
-  background: green;
+  background: lime;
   opacity: 1;
 }
 .responseState:hover {

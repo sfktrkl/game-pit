@@ -19,7 +19,7 @@
       </div>
       <div v-if="enable_learn">Learned Letters: 
         <span v-for="(item, key) in learned_letters" :key="item">
-          <span style="color: green">{{key.toUpperCase() + " "}}</span>
+          <span style="color: lime">{{key.toUpperCase() + " "}}</span>
         </span>
       </div>
 
