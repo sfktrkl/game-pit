@@ -106,7 +106,7 @@ html, body, #app {
 
 .outer {
   height: 100%;
-  background-image: radial-gradient(60% 200%, #008000 40%, #000B80 200%);
+  background: radial-gradient(ellipse at top, #008000 40%, #000B80 160%);
 }
 
 .inner {
