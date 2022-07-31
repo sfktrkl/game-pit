@@ -1,0 +1,93 @@
+:root {
+  --translation-y: 0px;
+  --translation-x: 740px;
+  --card-width: 800px;
+  --card-margin-y: 40px;
+  --card-margin-x: 80px;
+}
+
+.home-container {
+  margin-left: 10%;
+  transform: translateY(50%);
+}
+
+.card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--card-width);
+  margin-top: var(--card-margin-y);
+  margin-left: var(--card-margin-x);
+  transition: all 0.3s ease-in-out;
+  border: 6px solid rgba(255, 255, 255, 0.4);
+}
+
+.card-img {
+  display: block;
+  width: 100%;
+}
+
+.card-input {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  z-index: 1;
+  height: 100%;
+  width: var(--card-width);
+}
+
+.card-link:hover ~ .card {
+  top: var(--translation-y);
+  left: var(--translation-x);
+  transition: all 0.7s ease-in-out;
+}
+
+.card-caption {
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.card-description span {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  padding: 20px;
+  opacity: 0;
+  color: #008000;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.card-description .card-title {
+  margin-top: -30px;
+}
+
+.card-description .card-additional {
+  margin-top: 80px;
+}
+
+.card-input:hover + .card-caption span {
+  transition: all 0.2s ease-in-out 0.2s;
+  opacity: 1;
+}
+
+.card-input:hover + .card-caption {
+  transition: all 1s linear;
+  background: white;
+  opacity: 0.8;
+}
+
+@media screen and (max-width: 1000px) {
+  :root {
+    --translation-y: 200px;
+    --translation-x: 0px;
+    --card-width: 500px;
+    --card-margin-y: 50px;
+    --card-margin-x: 10px;
+  }
+}
