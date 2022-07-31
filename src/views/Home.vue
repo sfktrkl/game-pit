@@ -105,12 +105,10 @@ export default {
   padding-right: 2em;
   border-radius: 1em;
   transition: .5s;
-  background: radial-gradient(var(--clr-inner, #000B80), var(--clr-outer, #008000));
   text-align: center;
   color: #ffffff;
 }
 .application:hover {
-  background: radial-gradient(var(--clr-inner, #000280), var(--clr-outer, #4FC2CC));
   border-radius: 3em;
 }
 
