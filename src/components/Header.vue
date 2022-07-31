@@ -27,7 +27,6 @@
   margin: 0;
 }
 nav {
-  background: #008000;
   height: 60px;
 }
 .logo {
