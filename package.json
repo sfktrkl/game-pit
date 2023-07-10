@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "wasm": "wasm-pack build src/views/Zombiez/zombiez"
+    "wasm": "wasm-pack build src/views/Zombiez/zombiez",
+    "firebase": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build"
   },
   "dependencies": {
     "@mediapipe/camera_utils": "^0.3.1620247984",
