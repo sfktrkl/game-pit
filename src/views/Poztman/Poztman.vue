@@ -119,7 +119,7 @@ export default {
         { name: 'Add table', type:'Post', url: "addTable", input: "table" },
         { name: 'Subtract table', type:'Post', url: "subtractTable", input: "table" }
       ],
-      url: "https://game-pit-poztman-server.herokuapp.com/",
+      url: "https://3.75.196.124:3000/",
       url2: " ",
       request: {},
 

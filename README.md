@@ -4,12 +4,6 @@
   <a href="https://game-pit.web.app/" >
     <img src="https://img.shields.io/github/actions/workflow/status/sfktrkl/game-pit/firebase-hosting-merge.yml" />
   </a>
-  <a href="https://game-pit.web.app/Chat" >
-    <img src="https://img.shields.io/website?down_message=offline&label=chat-server&up_message=online&url=https%3A%2F%2Fgame-pit-chat-server.herokuapp.com%2F" />
-  </a>
-  <a href="https://game-pit.web.app/Poztman" >
-    <img src="https://img.shields.io/website?down_message=offline&label=poztman-server&up_message=online&url=https%3A%2F%2Fgame-pit-poztman-server.herokuapp.com%2F" />
-  </a>
   <a href="https://hub.docker.com/r/sfktrkl/game-pit" >
     <img src="https://img.shields.io/docker/pulls/sfktrkl/game-pit" />
   </a>

@@ -64,7 +64,7 @@ export default {
       users: [],
       message: "",
       messages: [],
-      socket: io('https://game-pit-chat-server.herokuapp.com'),
+      socket: io("https://18.195.50.181:3000"),
       socketId : ""
     }
   },
