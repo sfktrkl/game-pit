@@ -2,10 +2,7 @@
 
 <p align="center">
   <a href="https://game-pit.web.app/" >
-    <img src="https://img.shields.io/github/workflow/status/sfktrkl/game-pit/Deploy%20to%20Firebase%20Hosting%20on%20merge?label=firebase" />
-  </a>
-  <a href="https://game-pit.herokuapp.com/" >
-    <img src="https://pyheroku-badge.herokuapp.com/?app=game-pit&style=flat" />
+    <img src="https://img.shields.io/github/actions/workflow/status/sfktrkl/game-pit/firebase-hosting-merge.yml" />
   </a>
   <a href="https://game-pit.web.app/Chat" >
     <img src="https://img.shields.io/website?down_message=offline&label=chat-server&up_message=online&url=https%3A%2F%2Fgame-pit-chat-server.herokuapp.com%2F" />
