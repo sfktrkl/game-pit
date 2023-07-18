@@ -119,7 +119,7 @@ export default {
         { name: 'Add table', type:'Post', url: "addTable", input: "table" },
         { name: 'Subtract table', type:'Post', url: "subtractTable", input: "table" }
       ],
-      url: "https://game-pit-poztman-server.vercel.app/",
+      url: "https://game-pit.vercel.app/",
       url2: " ",
       request: {},
 

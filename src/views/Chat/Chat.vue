@@ -64,9 +64,9 @@ export default {
       users: [],
       message: "",
       messages: [],
-      socket: io("https://18.195.50.181:3000"),
-      socketId : ""
-    }
+      socket: io("https://game-pit-chat-server.vercel.app"),
+      socketId: "",
+    };
   },
   methods: {
     joinRoom() {
