@@ -4,6 +4,12 @@
   <a href="https://game-pit.web.app/" >
     <img src="https://img.shields.io/github/actions/workflow/status/sfktrkl/game-pit/firebase-hosting-merge.yml" />
   </a>
+  <a href="https://game-pit.vercel.app/" >
+    <img src="https://img.shields.io/github/deployments/sfktrkl/game-pit/production?label=poztman-server" />
+  </a>
+  <a href="https://game-pit.vercel.app/" >
+    <img src="https://img.shields.io/github/deployments/sfktrkl/game-pit/game-pit-chat-server?label=chat-server" />
+  </a>
   <a href="https://hub.docker.com/r/sfktrkl/game-pit" >
     <img src="https://img.shields.io/docker/pulls/sfktrkl/game-pit" />
   </a>
