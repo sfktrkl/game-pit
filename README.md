@@ -7,7 +7,7 @@
   <a href="https://game-pit.vercel.app/" >
     <img src="https://img.shields.io/github/deployments/sfktrkl/game-pit/production?label=poztman-server" />
   </a>
-  <a href="https://game-pit.vercel.app/" >
+  <a href="https://game-pit-chat-server.vercel.app/" >
     <img src="https://img.shields.io/github/deployments/sfktrkl/game-pit/game-pit-chat-server?label=chat-server" />
   </a>
   <a href="https://hub.docker.com/r/sfktrkl/game-pit" >
